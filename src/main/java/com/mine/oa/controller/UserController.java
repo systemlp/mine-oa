@@ -4,10 +4,9 @@ import com.mine.oa.dto.UserLoginDto;
 import com.mine.oa.service.UserService;
 import com.mine.oa.vo.CommonResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /***
  *
@@ -28,6 +27,19 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public CommonResultVo login(@RequestBody UserLoginDto loginDto) {
         return userService.login(loginDto);
+    }
+
+    @RequestMapping(value = "/getUserByToken", method = RequestMethod.GET)
+    public CommonResultVo getUserByToken(String token) {
+        return userService.getByToken(token);
+    }
+
+    @RequestMapping(value = "/updatePwd", method = RequestMethod.POST)
+    public CommonResultVo updatePwd(@RequestBody Map<String, String> paramMap) {
+        String token = paramMap.get("token");
+        String oldPwd = paramMap.get("oldPwd");
+        String newPwd = paramMap.get("newPwd");
+        return userService.updatePwd(token, oldPwd, newPwd);
     }
 
 }

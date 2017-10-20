@@ -22,6 +22,14 @@ public class CommonResultVo<T> {
         this.setData(data);
     }
 
+    public CommonResultVo() {
+    }
+
+    public CommonResultVo(int code, String msg) {
+        this.code = code;
+        this.msg = msg;
+    }
+
     public int getCode() {
         return code;
     }

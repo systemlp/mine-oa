@@ -1,20 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mine.oa.mapper.UserMapper" >
-    <sql id="Base_Column_List" >
+<mapper namespace="com.mine.oa.mapper.UserMapper">
+    <sql id="Base_Column_List">
         `id`, `user_name`, `password`, `email`, `photo_url`, `last_login_time`, `login_fail_count`, `unlock_time`, `login_ip`, `state`, `create_time`, `create_user_id`, `update_time`, `update_user_id`
     </sql>
 
     <select id="findAll" resultType="UserPo">
         SELECT
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         FROM t_user
     </select>
 
     <select id="getByCondition" resultType="UserPo">
         SELECT
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         FROM t_user
-        WHERE user_name=#{userName} AND password=#{password}
+        WHERE state=1
+        <if test="userName!=null">
+            AND user_name=#{userName}
+        </if>
+        <if test="password!=null">
+            AND password=#{password}
+        </if>
     </select>
+
+    <update id="updatePwd">
+        UPDATE t_user SET `password`=#{password} WHERE user_name=#{userName}
+    </update>
 </mapper>

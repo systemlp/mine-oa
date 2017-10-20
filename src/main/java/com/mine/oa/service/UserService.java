@@ -1,6 +1,7 @@
 package com.mine.oa.service;
 
 import com.mine.oa.dto.UserLoginDto;
+import com.mine.oa.entity.UserPo;
 import com.mine.oa.vo.CommonResultVo;
 
 import java.util.Map;
@@ -17,5 +18,9 @@ import java.util.Map;
 public interface UserService {
 
     CommonResultVo<Map> login(UserLoginDto loginDto);
+
+    CommonResultVo<UserPo> getByToken(String token);
+
+    CommonResultVo updatePwd(String token,String oldPwd,String newPwd);
 
 }

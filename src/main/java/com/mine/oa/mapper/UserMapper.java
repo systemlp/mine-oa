@@ -19,4 +19,6 @@ public interface UserMapper {
 
     UserPo getByCondition(UserPo userPo);
 
+    int updatePwd(UserPo userPo);
+
 }

@@ -3,6 +3,7 @@ package com.mine.oa.service.impl;
 import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,8 +47,52 @@ public class UserServiceImpl implements UserService {
             resultVo.setMsg("用户名或密码错误");
         } else {
             Map<String, String> map = Maps.newHashMap();
-            map.put("token", Base64Utils.encodeToString(loginDto.getPassword().getBytes()));
+            map.put("token", Base64Utils.encodeToString(loginDto.getUserName().getBytes()));
             resultVo.success(map);
+        }
+        return resultVo;
+    }
+
+    @Override
+    public CommonResultVo<UserPo> getByToken(String token) {
+        if (StringUtils.isBlank(token)) {
+            throw new InParamException("token异常");
+        }
+        UserPo userPo = new UserPo();
+        userPo.setUserName(new String(Base64Utils.decodeFromString(token)));
+        userPo = userMapper.getByCondition(userPo);
+        if (userPo == null) {
+            throw new InParamException("token异常");
+        }
+        CommonResultVo<UserPo> resultVo = new CommonResultVo<>();
+        resultVo.success(userPo);
+        return resultVo;
+    }
+
+    @Override
+    public CommonResultVo updatePwd(String token, String oldPwd, String newPwd) {
+        if (StringUtils.isBlank(token) || StringUtils.isBlank(oldPwd) || StringUtils.isBlank(newPwd)) {
+            throw new InParamException("参数异常");
+        }
+        UserPo userPo = new UserPo();
+        String userName = new String(Base64Utils.decodeFromString(token));
+        userPo.setUserName(userName);
+        userPo.setPassword(DigestUtils.sha256Hex(oldPwd + userName));
+        userPo = userMapper.getByCondition(userPo);
+        CommonResultVo resultVo = new CommonResultVo();
+        if (userPo == null) {
+            resultVo.setCode(0);
+            resultVo.setMsg("原始密码错误");
+        } else {
+            userPo = new UserPo();
+            userPo.setUserName(userName);
+            userPo.setPassword(DigestUtils.sha256Hex(newPwd + userName));
+            if (userMapper.updatePwd(userPo) > 0) {
+                resultVo.setCode(CommonResultVo.SUCCESS_CODE);
+                resultVo.setMsg("密码修改成功。");
+            } else {
+                throw new InParamException("参数异常");
+            }
         }
         return resultVo;
     }
