@@ -17,9 +17,10 @@ public class CommonResultVo<T> {
     private String msg;
     private T data;
 
-    public void success(T data) {
+    public CommonResultVo<T> success(T data) {
         this.setCode(SUCCESS_CODE);
         this.setData(data);
+        return this;
     }
 
     public CommonResultVo() {

@@ -1,5 +1,6 @@
 package com.mine.oa.mapper;
 
+import com.mine.oa.dto.UserDataDto;
 import com.mine.oa.entity.UserPo;
 
 import java.util.List;
@@ -20,5 +21,7 @@ public interface UserMapper {
     UserPo getByCondition(UserPo userPo);
 
     int updatePwd(UserPo userPo);
+
+    UserDataDto findDataByUserName(String userName);
 
 }

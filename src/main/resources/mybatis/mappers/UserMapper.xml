@@ -27,4 +27,25 @@
     <update id="updatePwd">
         UPDATE t_user SET `password`=#{password} WHERE user_name=#{userName}
     </update>
+
+    <select id="findDataByUserName" resultType="UserDataDto">
+        SELECT
+            t.user_name,
+            t.email,
+            t1.`name`,
+            t1.sex,
+            t1.card_type,
+            t1.card_no,
+            t1.mobile,
+            t1.address,
+            t3.`name` deptName,
+            t2.`name` posName
+        FROM
+            `t_user` t
+        INNER JOIN t_employee t1 ON t.id = t1.user_id
+        LEFT JOIN t_position t2 ON t1.position_id = t2.id
+        LEFT JOIN t_department t3 ON t2.dept_id = t3.id
+        WHERE
+            t.user_name = #{user_name}
+    </select>
 </mapper>

@@ -2,6 +2,7 @@ package com.mine.oa.service.impl;
 
 import java.util.Map;
 
+import com.mine.oa.dto.UserDataDto;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,11 +90,24 @@ public class UserServiceImpl implements UserService {
             userPo.setPassword(DigestUtils.sha256Hex(newPwd + userName));
             if (userMapper.updatePwd(userPo) > 0) {
                 resultVo.setCode(CommonResultVo.SUCCESS_CODE);
-                resultVo.setMsg("密码修改成功。");
+                resultVo.setMsg("密码修改成功，请重新登录。");
             } else {
                 throw new InParamException("参数异常");
             }
         }
         return resultVo;
+    }
+
+    @Override
+    public CommonResultVo<UserDataDto> findDataByUserName(String userName) {
+        if (StringUtils.isBlank(userName)) {
+            throw new InParamException("参数异常");
+        }
+        UserDataDto dataDto = userMapper.findDataByUserName(new String(Base64Utils.decodeFromString(userName)));
+        if (dataDto == null) {
+            throw new InParamException("参数异常");
+        }
+        CommonResultVo<UserDataDto> resultVo = new CommonResultVo<>();
+        return resultVo.success(dataDto);
     }
 }

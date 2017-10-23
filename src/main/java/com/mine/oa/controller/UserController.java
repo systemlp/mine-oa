@@ -42,4 +42,9 @@ public class UserController {
         return userService.updatePwd(token, oldPwd, newPwd);
     }
 
+    @RequestMapping(value = "/findDataByUserName", method = RequestMethod.GET)
+    public CommonResultVo findDataByUserName(String token) {
+        return userService.findDataByUserName(token);
+    }
+
 }

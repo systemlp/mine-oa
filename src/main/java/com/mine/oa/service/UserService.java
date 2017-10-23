@@ -1,5 +1,6 @@
 package com.mine.oa.service;
 
+import com.mine.oa.dto.UserDataDto;
 import com.mine.oa.dto.UserLoginDto;
 import com.mine.oa.entity.UserPo;
 import com.mine.oa.vo.CommonResultVo;
@@ -22,5 +23,7 @@ public interface UserService {
     CommonResultVo<UserPo> getByToken(String token);
 
     CommonResultVo updatePwd(String token,String oldPwd,String newPwd);
+
+    CommonResultVo<UserDataDto> findDataByUserName(String userName);
 
 }
