@@ -26,7 +26,7 @@
         </encoder>
     </appender>
     <root level="info">
-        <appender-ref ref="APP" />
+        <!--<appender-ref ref="APP" />-->
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>
