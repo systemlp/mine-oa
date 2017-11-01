@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mine.oa.mapper.EmployeeMapper">
+    <sql id="Base_Column_List">
+
+    </sql>
+
+    <select id="findByParam" resultType="DeptDto">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_employee t
+        <where>
+            <if test="state!=null">
+              t.state=#{state}
+            </if>
+        </where>
+    </select>
+
+</mapper>

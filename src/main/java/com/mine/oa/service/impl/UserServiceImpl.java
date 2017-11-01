@@ -1,10 +1,14 @@
 package com.mine.oa.service.impl;
 
+import java.math.BigInteger;
 import java.util.Map;
 
 import com.mine.oa.dto.UserDataDto;
+import com.mine.oa.util.RsaUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +34,8 @@ import org.springframework.util.Base64Utils;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Autowired
     UserMapper userMapper;
 
@@ -48,7 +54,9 @@ public class UserServiceImpl implements UserService {
             resultVo.setMsg("用户名或密码错误");
         } else {
             Map<String, String> map = Maps.newHashMap();
-            map.put("token", Base64Utils.encodeToString(loginDto.getUserName().getBytes()));
+            String tokenPlain = userPo.getId() + " " + userPo.getUserName();
+            String token = RsaUtil.encrypt(tokenPlain);
+            map.put("token", token);
             resultVo.success(map);
         }
         return resultVo;
@@ -60,7 +68,7 @@ public class UserServiceImpl implements UserService {
             throw new InParamException("token异常");
         }
         UserPo userPo = new UserPo();
-        userPo.setUserName(new String(Base64Utils.decodeFromString(token)));
+        userPo.setUserName(RsaUtil.getUserNameByToken(token));
         userPo = userMapper.getByCondition(userPo);
         if (userPo == null) {
             throw new InParamException("token异常");
@@ -72,11 +80,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public CommonResultVo updatePwd(String token, String oldPwd, String newPwd) {
-        if (StringUtils.isBlank(token) || StringUtils.isBlank(oldPwd) || StringUtils.isBlank(newPwd)) {
+        if (StringUtils.isAnyBlank(token, oldPwd, newPwd)) {
             throw new InParamException("参数异常");
         }
+
         UserPo userPo = new UserPo();
-        String userName = new String(Base64Utils.decodeFromString(token));
+        String userName = RsaUtil.getUserNameByToken(token);
         userPo.setUserName(userName);
         userPo.setPassword(DigestUtils.sha256Hex(oldPwd + userName));
         userPo = userMapper.getByCondition(userPo);
@@ -88,6 +97,7 @@ public class UserServiceImpl implements UserService {
             userPo = new UserPo();
             userPo.setUserName(userName);
             userPo.setPassword(DigestUtils.sha256Hex(newPwd + userName));
+            userPo.setUpdateUserId(userPo.getId());
             if (userMapper.updatePwd(userPo) > 0) {
                 resultVo.setCode(CommonResultVo.SUCCESS_CODE);
                 resultVo.setMsg("密码修改成功，请重新登录。");
@@ -103,7 +113,7 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isBlank(userName)) {
             throw new InParamException("参数异常");
         }
-        UserDataDto dataDto = userMapper.findDataByUserName(new String(Base64Utils.decodeFromString(userName)));
+        UserDataDto dataDto = userMapper.findDataByUserName(RsaUtil.getUserNameByToken(userName));
         if (dataDto == null) {
             throw new InParamException("参数异常");
         }

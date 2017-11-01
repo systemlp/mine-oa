@@ -22,28 +22,27 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @PostMapping(value = "/login")
     public CommonResultVo login(@RequestBody UserLoginDto loginDto) {
         return userService.login(loginDto);
     }
 
-    @RequestMapping(value = "/getUserByToken", method = RequestMethod.GET)
-    public CommonResultVo getUserByToken(String token) {
+    @GetMapping(value = "/getUserByToken")
+    public CommonResultVo getUserByToken(@RequestHeader String token) {
         return userService.getByToken(token);
     }
 
-    @RequestMapping(value = "/updatePwd", method = RequestMethod.POST)
-    public CommonResultVo updatePwd(@RequestBody Map<String, String> paramMap) {
-        String token = paramMap.get("token");
+    @PostMapping(value = "/updatePwd")
+    public CommonResultVo updatePwd(@RequestBody Map<String, String> paramMap,@RequestHeader String token) {
         String oldPwd = paramMap.get("oldPwd");
         String newPwd = paramMap.get("newPwd");
         return userService.updatePwd(token, oldPwd, newPwd);
     }
 
-    @RequestMapping(value = "/findDataByUserName", method = RequestMethod.GET)
-    public CommonResultVo findDataByUserName(String token) {
+    @GetMapping(value = "/findDataByUserName")
+    public CommonResultVo findDataByUserName(@RequestHeader String token) {
         return userService.findDataByUserName(token);
     }
 

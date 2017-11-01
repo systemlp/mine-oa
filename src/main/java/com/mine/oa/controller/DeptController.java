@@ -1,12 +1,12 @@
 package com.mine.oa.controller;
 
 import com.mine.oa.dto.DeptQueryDto;
+import com.mine.oa.entity.DepartmentPo;
 import com.mine.oa.service.DeptService;
 import com.mine.oa.vo.CommonResultVo;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /***
  *
@@ -24,9 +24,24 @@ public class DeptController {
     @Autowired
     DeptService deptService;
 
-    @RequestMapping("/findPageByParam")
+    @PostMapping("/findPageByParam")
     public CommonResultVo findPageByParam(@RequestBody DeptQueryDto param) {
         return deptService.findPageByParam(param);
+    }
+
+    @GetMapping("/findOptionalParent/{id}")
+    public CommonResultVo findOptionalParent(@PathVariable Integer id){
+        return deptService.findOptionalParnet(id);
+    }
+
+    @PostMapping("/merge")
+    public CommonResultVo merge(@RequestBody DepartmentPo param, @RequestHeader String token){
+        return deptService.update(param, token);
+    }
+
+    @GetMapping("/delete/{id}")
+    public CommonResultVo merge(@PathVariable Integer id, @RequestHeader String token){
+        return deptService.delete(id, token);
     }
 
 }

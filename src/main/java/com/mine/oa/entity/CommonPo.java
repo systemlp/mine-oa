@@ -16,7 +16,7 @@ public class CommonPo {
     private Date createTime;
     private Integer createUserId;
     private Date updateTime;
-    private String updateUserId;
+    private Integer updateUserId;
     private Integer state;
 
     public Date getCreateTime() {
@@ -43,11 +43,11 @@ public class CommonPo {
         this.updateTime = updateTime;
     }
 
-    public String getUpdateUserId() {
+    public Integer getUpdateUserId() {
         return updateUserId;
     }
 
-    public void setUpdateUserId(String updateUserId) {
+    public void setUpdateUserId(Integer updateUserId) {
         this.updateUserId = updateUserId;
     }
 

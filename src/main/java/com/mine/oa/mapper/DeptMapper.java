@@ -1,9 +1,10 @@
 package com.mine.oa.mapper;
 
+import java.util.List;
+
 import com.mine.oa.dto.DeptDto;
 import com.mine.oa.dto.DeptQueryDto;
-
-import java.util.List;
+import com.mine.oa.entity.DepartmentPo;
 
 /***
  *
@@ -18,4 +19,9 @@ public interface DeptMapper {
 
     List<DeptDto> findByParam(DeptQueryDto param);
 
+    List<DepartmentPo> queryByParam(DepartmentPo param);
+
+    int merge(DepartmentPo param);
+
+    int delete(DepartmentPo param);
 }

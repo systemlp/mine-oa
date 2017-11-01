@@ -5,6 +5,10 @@
         t.`id`, t.`name`, t.`parent_id`, t1.`name` `parent_name`, t.`state`
     </sql>
 
+    <sql id="Dept_Column_List">
+        t.id,t.`name`,t.parent_id,t.state
+    </sql>
+
     <select id="findByParam" resultType="DeptDto">
         SELECT
         <include refid="Base_Column_List"/>
@@ -22,4 +26,26 @@
             </if>
         </where>
     </select>
+
+    <select id="queryByParam" resultType="DepartmentPo">
+        SELECT
+        <include refid="Dept_Column_List"/>
+        FROM t_department t
+        <where>
+            <if test="state!=null">
+                t.state=#{state}
+            </if>
+            <if test="parentId!=null">
+                AND t.parent_id=#{parentId}
+            </if>
+        </where>
+    </select>
+
+    <update id="merge">
+      UPDATE t_department SET `name`=#{name},parent_id=#{parentId},update_time=NOW(),update_user_id=#{updateUserId} WHERE id=#{id}
+    </update>
+
+    <update id="delete">
+      UPDATE t_department SET state=#{state},update_time=NOW(),update_user_id=#{updateUserId} WHERE id=#{id}
+    </update>
 </mapper>

@@ -13,6 +13,8 @@ public class CommonResultVo<T> {
 
     public static final int SUCCESS_CODE = 200;
 
+    public static final int WARN_CODE = 403;
+
     private int code;
     private String msg;
     private T data;

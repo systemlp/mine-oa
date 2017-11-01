@@ -25,7 +25,7 @@
     </select>
 
     <update id="updatePwd">
-        UPDATE t_user SET `password`=#{password} WHERE user_name=#{userName}
+        UPDATE t_user SET `password`=#{password},update_time=NOW(),update_user_id=#{updateUserId} WHERE user_name=#{userName}
     </update>
 
     <select id="findDataByUserName" resultType="UserDataDto">
