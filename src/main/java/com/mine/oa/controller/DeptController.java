@@ -29,19 +29,34 @@ public class DeptController {
         return deptService.findPageByParam(param);
     }
 
+    @GetMapping("/findOptional")
+    public CommonResultVo findOptional() {
+        return deptService.findOptional();
+    }
+
     @GetMapping("/findOptionalParent/{id}")
-    public CommonResultVo findOptionalParent(@PathVariable Integer id){
+    public CommonResultVo findOptionalParent(@PathVariable Integer id) {
         return deptService.findOptionalParnet(id);
     }
 
     @PostMapping("/merge")
-    public CommonResultVo merge(@RequestBody DepartmentPo param, @RequestHeader String token){
+    public CommonResultVo merge(@RequestBody DepartmentPo param, @RequestHeader String token) {
         return deptService.update(param, token);
     }
 
     @GetMapping("/delete/{id}")
-    public CommonResultVo merge(@PathVariable Integer id, @RequestHeader String token){
+    public CommonResultVo delete(@PathVariable Integer id, @RequestHeader String token) {
         return deptService.delete(id, token);
+    }
+
+    @GetMapping("/enable/{id}")
+    public CommonResultVo enable(@PathVariable Integer id, @RequestHeader String token) {
+        return deptService.enable(id, token);
+    }
+
+    @PostMapping("/insert")
+    public CommonResultVo insert(@RequestBody DepartmentPo param, @RequestHeader String token) {
+        return deptService.insert(param, token);
     }
 
 }

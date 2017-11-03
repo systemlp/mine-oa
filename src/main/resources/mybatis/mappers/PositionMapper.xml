@@ -16,7 +16,45 @@
             <if test="deptId!=null">
                 AND t.dept_id=#{deptId}
             </if>
+            <if test="name!=null and name!=''">
+                AND t.`name`=#{name}
+            </if>
         </where>
     </select>
+
+    <select id="queryByParam" resultType="PositionDto">
+        SELECT
+        t.id,
+        t.`name`,
+        t.dept_id,
+        t1.`name` deptName,
+        t.state
+        FROM
+        `t_position` t
+        INNER JOIN t_department t1 ON t.dept_id=t1.id AND t1.state=1
+        <where>
+            <if test="state!=null">
+                t.state=#{state}
+            </if>
+            <if test="name!=null and name!=''">
+                AND t.`name`=#{name}
+            </if>
+            <if test="deptId!=null">
+                AND t.dept_id=#{deptId}
+            </if>
+        </where>
+    </select>
+
+    <update id="merge">
+        UPDATE t_position SET `name`=#{name},dept_id=#{deptId},update_time=NOW(),update_user_id=#{updateUserId} WHERE id=#{id}
+    </update>
+
+    <update id="updateState">
+        UPDATE t_position SET state=#{state},update_time=NOW(),update_user_id=#{updateUserId} WHERE id=#{id}
+    </update>
+
+    <insert id="insert">
+        INSERT INTO t_position (`name`, dept_id, create_user_id) VALUES (#{name}, #{deptId}, #{createUserId})
+    </insert>
 
 </mapper>

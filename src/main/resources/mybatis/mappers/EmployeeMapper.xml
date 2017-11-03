@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.mine.oa.mapper.EmployeeMapper">
     <sql id="Base_Column_List">
-
+        t.id,t.`name`,t.sex,t.card_type,t.card_no,t.mobile,t.address,t.user_id,t.position_id,t.state
     </sql>
 
     <select id="findByParam" resultType="DeptDto">
@@ -12,6 +12,9 @@
         <where>
             <if test="state!=null">
               t.state=#{state}
+            </if>
+            <if test="positionId!=null">
+                AND t.position_id=#{positionId}
             </if>
         </where>
     </select>

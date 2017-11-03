@@ -27,4 +27,10 @@ public interface DeptService {
 
     CommonResultVo delete(Integer id, String token);
 
+    CommonResultVo enable(Integer id, String token);
+
+    CommonResultVo<List<DepartmentPo>> findOptional();
+
+    CommonResultVo insert(DepartmentPo param, String token);
+
 }

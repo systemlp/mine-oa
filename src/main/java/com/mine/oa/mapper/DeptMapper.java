@@ -23,5 +23,7 @@ public interface DeptMapper {
 
     int merge(DepartmentPo param);
 
-    int delete(DepartmentPo param);
+    int updateState(DepartmentPo param);
+
+    int insert(DepartmentPo param);
 }

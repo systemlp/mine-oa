@@ -38,6 +38,12 @@
             <if test="parentId!=null">
                 AND t.parent_id=#{parentId}
             </if>
+            <if test="name!=null and name!=''">
+                AND t.`name`=#{name}
+            </if>
+            <if test="id!=null">
+                AND t.id=#{id}
+            </if>
         </where>
     </select>
 
@@ -45,7 +51,11 @@
       UPDATE t_department SET `name`=#{name},parent_id=#{parentId},update_time=NOW(),update_user_id=#{updateUserId} WHERE id=#{id}
     </update>
 
-    <update id="delete">
+    <update id="updateState">
       UPDATE t_department SET state=#{state},update_time=NOW(),update_user_id=#{updateUserId} WHERE id=#{id}
     </update>
+    
+    <insert id="insert">
+        INSERT INTO t_department (`name`, parent_id, create_user_id) VALUES (#{name}, #{parentId}, #{createUserId})
+    </insert>
 </mapper>

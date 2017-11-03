@@ -1,5 +1,7 @@
 package com.mine.oa.vo;
 
+import com.alibaba.fastjson.JSON;
+
 /***
  *
  * 〈一句话功能简述〉<br>
@@ -22,6 +24,18 @@ public class CommonResultVo<T> {
     public CommonResultVo<T> success(T data) {
         this.setCode(SUCCESS_CODE);
         this.setData(data);
+        return this;
+    }
+
+    public CommonResultVo successMsg(String msg) {
+        this.setCode(SUCCESS_CODE);
+        this.setMsg(msg);
+        return this;
+    }
+
+    public CommonResultVo warn(String msg) {
+        this.setCode(WARN_CODE);
+        this.setMsg(msg);
         return this;
     }
 
