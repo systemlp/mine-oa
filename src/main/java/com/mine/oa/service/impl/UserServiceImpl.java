@@ -85,6 +85,7 @@ public class UserServiceImpl implements UserService {
             throw new InParamException("参数异常");
         }
         UserPo userPo = RsaUtil.getUserByToken(token);
+        Integer userId = userPo.getId();
         String userName = userPo.getUserName();
         userPo.setPassword(DigestUtils.sha256Hex(oldPwd + userPo.getUserName()));
         userPo = userMapper.getByCondition(userPo);
@@ -95,7 +96,7 @@ public class UserServiceImpl implements UserService {
             return resultVo;
         }
         userPo = new UserPo();
-        userPo.setId(userPo.getId());
+        userPo.setId(userId);
         userPo.setUserName(userName);
         userPo.setPassword(DigestUtils.sha256Hex(newPwd + userName));
         if (userMapper.updatePwd(userPo) < 1) {
