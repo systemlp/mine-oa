@@ -15,5 +15,7 @@ public final class OaConstants {
     public static final int DELETE_STATE = 0;
     /** 正常状态 */
     public static final int NORMAL_STATE = 1;
+    /** 默认用户头像 */
+    public static final String DEFAULT_PHOTO = "defaultPhoto.jpg";
 
 }

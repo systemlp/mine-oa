@@ -26,4 +26,6 @@ public interface UserMapper {
 
     int updatePhoto(UserPo userPo);
 
+    List<String> findAllPhoto();
+
 }
