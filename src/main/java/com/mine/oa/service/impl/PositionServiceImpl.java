@@ -2,8 +2,6 @@ package com.mine.oa.service.impl;
 
 import java.util.List;
 
-import com.mine.oa.entity.DepartmentPo;
-import com.mine.oa.mapper.DeptMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,9 +11,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mine.oa.constant.OaConstants;
 import com.mine.oa.dto.PositionDto;
+import com.mine.oa.entity.DepartmentPo;
 import com.mine.oa.entity.EmployeePo;
 import com.mine.oa.entity.PositionPo;
 import com.mine.oa.exception.InParamException;
+import com.mine.oa.mapper.DeptMapper;
 import com.mine.oa.mapper.EmployeeMapper;
 import com.mine.oa.mapper.PositionMapper;
 import com.mine.oa.service.PositionService;
@@ -59,13 +59,13 @@ public class PositionServiceImpl implements PositionService {
         DepartmentPo queryParam = new DepartmentPo();
         queryParam.setId(param.getDeptId());
         List<DepartmentPo> parentDept = deptMapper.queryByParam(queryParam);
-        if(CollectionUtils.isEmpty(parentDept)){
+        if (CollectionUtils.isEmpty(parentDept)) {
             throw new InParamException("参数异常");
         }
-        if(parentDept.get(0).getState() == OaConstants.DELETE_STATE){
+        if (parentDept.get(0).getState() == OaConstants.DELETE_STATE) {
             return new CommonResultVo().warn("啊哦，在您操作期间所属部门被删除了，请重新选择吧-_-");
         }
-        param.setUpdateUserId(RsaUtil.getUserIdByToken(token));
+        param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
         if (positionMapper.merge(param) < 1) {
             throw new RuntimeException();
         }
@@ -86,7 +86,7 @@ public class PositionServiceImpl implements PositionService {
         PositionPo param = new PositionPo();
         param.setId(id);
         param.setState(OaConstants.DELETE_STATE);
-        param.setUpdateUserId(RsaUtil.getUserIdByToken(token));
+        param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
         if (positionMapper.updateState(param) < 1) {
             throw new InParamException("参数异常");
         }
@@ -101,7 +101,7 @@ public class PositionServiceImpl implements PositionService {
         PositionPo param = new PositionPo();
         param.setId(id);
         param.setState(OaConstants.NORMAL_STATE);
-        param.setUpdateUserId(RsaUtil.getUserIdByToken(token));
+        param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
         if (positionMapper.updateState(param) < 1) {
             throw new InParamException("参数异常");
         }
@@ -121,13 +121,13 @@ public class PositionServiceImpl implements PositionService {
         DepartmentPo queryDeptParam = new DepartmentPo();
         queryDeptParam.setId(param.getDeptId());
         List<DepartmentPo> dept = deptMapper.queryByParam(queryDeptParam);
-        if(CollectionUtils.isEmpty(dept)){
+        if (CollectionUtils.isEmpty(dept)) {
             throw new InParamException("参数异常");
         }
-        if(dept.get(0).getState() == OaConstants.DELETE_STATE){
+        if (dept.get(0).getState() == OaConstants.DELETE_STATE) {
             return new CommonResultVo().warn("啊哦，在您操作期间所属部门被删除了，请重新选择吧-_-");
         }
-        param.setCreateUserId(RsaUtil.getUserIdByToken(token));
+        param.setCreateUserId(RsaUtil.getUserByToken(token).getId());
         if (positionMapper.insert(param) < 1) {
             throw new InParamException("参数异常");
         }

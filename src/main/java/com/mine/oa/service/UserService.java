@@ -1,15 +1,16 @@
 package com.mine.oa.service;
 
+import java.util.Map;
+
 import com.mine.oa.dto.UserDataDto;
 import com.mine.oa.dto.UserLoginDto;
 import com.mine.oa.entity.UserPo;
 import com.mine.oa.vo.CommonResultVo;
-
-import java.util.Map;
+import org.springframework.web.multipart.MultipartFile;
 
 /***
  *
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈功能详细描述〉
  *
  * @author liupeng
@@ -22,8 +23,10 @@ public interface UserService {
 
     CommonResultVo<UserPo> getByToken(String token);
 
-    CommonResultVo updatePwd(String token,String oldPwd,String newPwd);
+    CommonResultVo updatePwd(String token, String oldPwd, String newPwd);
 
     CommonResultVo<UserDataDto> findDataByUserName(String userName);
+
+    void uploadUserPhoto(String token, MultipartFile userPhoto);
 
 }

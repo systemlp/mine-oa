@@ -24,4 +24,6 @@ public interface UserMapper {
 
     UserDataDto findDataByUserName(String userName);
 
+    int updatePhoto(UserPo userPo);
+
 }

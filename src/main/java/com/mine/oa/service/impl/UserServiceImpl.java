@@ -4,8 +4,11 @@ import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.collect.Maps;
 import com.mine.oa.dto.UserDataDto;
@@ -15,6 +18,7 @@ import com.mine.oa.exception.InParamException;
 import com.mine.oa.mapper.UserMapper;
 import com.mine.oa.service.UserService;
 import com.mine.oa.util.BeanUtil;
+import com.mine.oa.util.FileUtil;
 import com.mine.oa.util.RsaUtil;
 import com.mine.oa.vo.CommonResultVo;
 
@@ -30,10 +34,12 @@ import com.mine.oa.vo.CommonResultVo;
 @Service
 public class UserServiceImpl implements UserService {
 
-    // private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
+    @Autowired
+    private FileUtil fileUtil;
 
     @Override
     public CommonResultVo<Map> login(UserLoginDto loginDto) {
@@ -62,11 +68,13 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isBlank(token)) {
             throw new InParamException("token异常");
         }
-        UserPo userPo = new UserPo();
-        userPo.setUserName(RsaUtil.getUserNameByToken(token));
+        UserPo userPo = RsaUtil.getUserByToken(token);
         userPo = userMapper.getByCondition(userPo);
         if (userPo == null) {
             throw new InParamException("token异常");
+        }
+        if (StringUtils.isNotBlank(userPo.getPhotoUrl())) {
+            userPo.setPhotoUrl(FileUtil.getImgBase64(userPo.getPhotoUrl()));
         }
         return new CommonResultVo<UserPo>().success(userPo);
     }
@@ -76,11 +84,9 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isAnyBlank(token, oldPwd, newPwd)) {
             throw new InParamException("参数异常");
         }
-
-        UserPo userPo = new UserPo();
-        String userName = RsaUtil.getUserNameByToken(token);
-        userPo.setUserName(userName);
-        userPo.setPassword(DigestUtils.sha256Hex(oldPwd + userName));
+        UserPo userPo = RsaUtil.getUserByToken(token);
+        String userName = userPo.getUserName();
+        userPo.setPassword(DigestUtils.sha256Hex(oldPwd + userPo.getUserName()));
         userPo = userMapper.getByCondition(userPo);
         CommonResultVo resultVo = new CommonResultVo();
         if (userPo == null) {
@@ -89,9 +95,9 @@ public class UserServiceImpl implements UserService {
             return resultVo;
         }
         userPo = new UserPo();
+        userPo.setId(userPo.getId());
         userPo.setUserName(userName);
         userPo.setPassword(DigestUtils.sha256Hex(newPwd + userName));
-        userPo.setUpdateUserId(userPo.getId());
         if (userMapper.updatePwd(userPo) < 1) {
             throw new InParamException("参数异常");
         }
@@ -103,10 +109,30 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isBlank(userName)) {
             throw new InParamException("参数异常");
         }
-        UserDataDto dataDto = userMapper.findDataByUserName(RsaUtil.getUserNameByToken(userName));
+        UserDataDto dataDto = userMapper.findDataByUserName(RsaUtil.getUserByToken(userName).getUserName());
         if (dataDto == null) {
             throw new InParamException("参数异常");
         }
+        if (StringUtils.isNotBlank(dataDto.getPhotoUrl())) {
+            dataDto.setPhotoUrl(FileUtil.getImgBase64(dataDto.getPhotoUrl()));
+        }
         return new CommonResultVo<UserDataDto>().success(dataDto);
+    }
+
+    @Override
+    public void uploadUserPhoto(String token, MultipartFile userPhoto) {
+        if (StringUtils.isBlank(token)) {
+            throw new InParamException("token异常");
+        }
+        // 无法异步，文件上传时会先将文件临时存储在tomcat目录下，服务器响应后会马上删除该文件
+        // taskExecutor.execute(() -> {
+        // try {
+        UserPo userPo = RsaUtil.getUserByToken(token);
+        userPo.setPhotoUrl(fileUtil.uploadImg(userPhoto));
+        userMapper.updatePhoto(userPo);
+        // } catch (Exception e) {
+        // LOGGER.error("用户头像修改失败", e);
+        // }
+        // });
     }
 }

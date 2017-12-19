@@ -27,7 +27,7 @@ public class DeptServiceTest extends TestBase {
         param.setCurrent(1);
         param.setPageSize(5);
         CommonResultVo<PageInfo<DeptDto>> deptPage = deptService.findPageByParam(param);
-        System.out.println(deptPage.getData());
+        System.out.println(deptPage.getData().getSize());
     }
 
     @Test

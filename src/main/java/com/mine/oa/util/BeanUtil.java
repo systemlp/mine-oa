@@ -49,7 +49,9 @@ public class BeanUtil {
                                     if (StringUtils.isBlank(val.toString()))
                                         return attr;
                                 }
-                            } else if (!flag && !StringUtils.equalsIgnoreCase(attr, field.getName())) {
+                                continue;
+                            }
+                            if (!flag && !StringUtils.equalsIgnoreCase(attr, field.getName())) {
                                 Object val = field.get(object);// 得到此属性的值
                                 if (val == null || (val instanceof String && StringUtils.isBlank(val.toString())))
                                     return field.getName();

@@ -13,6 +13,7 @@ public class UserDataDto {
 
     private String userName;
     private String email;
+    private String photoUrl;
     private String name;
     private String sex;
     private String cardType;
@@ -36,6 +37,14 @@ public class UserDataDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public String getName() {
@@ -101,4 +110,5 @@ public class UserDataDto {
     public void setPosName(String posName) {
         this.posName = posName;
     }
+
 }

@@ -2,17 +2,15 @@ package com.mine.oa.util;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.SecureRandom;
+import java.security.*;
 
 import javax.crypto.Cipher;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.mine.oa.entity.UserPo;
 
 public final class RsaUtil {
 
@@ -64,7 +62,7 @@ public final class RsaUtil {
      * @return 密钥对
      * @throws Exception 文件操作异常
      */
-    private static KeyPair getKeyPair() throws Exception {
+    public static KeyPair getKeyPair() throws Exception {
         File keyFile = new File(KEY_FILE_URL);
         if (!keyFile.exists()) {
             return generateKeyPair();
@@ -171,6 +169,7 @@ public final class RsaUtil {
         return (byte) "0123456789ABCDEF".indexOf(c);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static String encrypt(String plain) {
         try {
             return new BigInteger(1, encrypt(getKeyPair().getPublic(), plain)).toString(16);
@@ -189,20 +188,15 @@ public final class RsaUtil {
         }
     }
 
-    public static String getUserNameByToken(String token) {
+    public static UserPo getUserByToken(String token) {
         try {
             String tokenPlain = decrypt(getKeyPair().getPrivate(), hexString2Bytes(token));
-            return tokenPlain.split(" ")[1];
-        } catch (Exception e) {
-            LOGGER.error("token解密异常");
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static Integer getUserIdByToken(String token) {
-        try {
-            String tokenPlain = decrypt(getKeyPair().getPrivate(), hexString2Bytes(token));
-            return Integer.parseInt(tokenPlain.split(" ")[0]);
+            assert tokenPlain != null;
+            String[] array = tokenPlain.split(" ");
+            UserPo user = new UserPo();
+            user.setId(Integer.parseInt(array[0]));
+            user.setUserName(array[1]);
+            return user;
         } catch (Exception e) {
             LOGGER.error("token解密异常");
             throw new RuntimeException(e);
@@ -212,6 +206,7 @@ public final class RsaUtil {
     public static void main(String[] args) throws Exception {
         String test = "12你1312好 32不%324&改变3g fbg啊";
         byte[] en_test = encrypt(getKeyPair().getPublic(), test);
+        assert en_test != null;
         String cipherText = new BigInteger(1, en_test).toString(16);
         System.out.println(cipherText);
         String de_test = decrypt(getKeyPair().getPrivate(), en_test);

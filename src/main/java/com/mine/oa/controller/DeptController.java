@@ -1,12 +1,12 @@
 package com.mine.oa.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.mine.oa.dto.DeptQueryDto;
 import com.mine.oa.entity.DepartmentPo;
 import com.mine.oa.service.DeptService;
 import com.mine.oa.vo.CommonResultVo;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 /***
  *
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class DeptController {
 
     @Autowired
-    DeptService deptService;
+    private DeptService deptService;
 
     @PostMapping("/findPageByParam")
     public CommonResultVo findPageByParam(@RequestBody DeptQueryDto param) {

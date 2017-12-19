@@ -81,13 +81,13 @@ public class DeptServiceImpl implements DeptService {
         DepartmentPo queryParam = new DepartmentPo();
         queryParam.setId(param.getParentId());
         List<DepartmentPo> parentDept = deptMapper.queryByParam(queryParam);
-        if(CollectionUtils.isEmpty(parentDept)){
+        if (CollectionUtils.isEmpty(parentDept)) {
             throw new InParamException("参数异常");
         }
-        if(parentDept.get(0).getState() == OaConstants.DELETE_STATE){
+        if (parentDept.get(0).getState() == OaConstants.DELETE_STATE) {
             return new CommonResultVo().warn("啊哦，在您操作期间父级部门被删除了，请重新选择吧-_-");
         }
-        param.setUpdateUserId(RsaUtil.getUserIdByToken(token));
+        param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
         if (deptMapper.merge(param) < 1) {
             throw new RuntimeException();
         }
@@ -122,7 +122,7 @@ public class DeptServiceImpl implements DeptService {
             return new CommonResultVo().warn(msg + "！");
         }
         param.setState(OaConstants.DELETE_STATE);
-        param.setUpdateUserId(RsaUtil.getUserIdByToken(token));
+        param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
         if (deptMapper.updateState(param) < 1) {
             throw new InParamException("参数异常");
         }
@@ -137,7 +137,7 @@ public class DeptServiceImpl implements DeptService {
         DepartmentPo param = new DepartmentPo();
         param.setId(id);
         param.setState(OaConstants.NORMAL_STATE);
-        param.setUpdateUserId(RsaUtil.getUserIdByToken(token));
+        param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
         if (deptMapper.updateState(param) < 1) {
             throw new InParamException("参数异常");
         }
@@ -165,13 +165,13 @@ public class DeptServiceImpl implements DeptService {
         queryParam.setName(null);
         queryParam.setId(param.getParentId());
         List<DepartmentPo> parentDept = deptMapper.queryByParam(queryParam);
-        if(CollectionUtils.isEmpty(parentDept)){
+        if (CollectionUtils.isEmpty(parentDept)) {
             throw new InParamException("参数异常");
         }
-        if(parentDept.get(0).getState() == OaConstants.DELETE_STATE){
+        if (parentDept.get(0).getState() == OaConstants.DELETE_STATE) {
             return new CommonResultVo().warn("啊哦，在您操作期间父级部门被删除了，请重新选择吧-_-");
         }
-        param.setCreateUserId(RsaUtil.getUserIdByToken(token));
+        param.setCreateUserId(RsaUtil.getUserByToken(token).getId());
         if (deptMapper.insert(param) < 1) {
             throw new InParamException("参数异常");
         }

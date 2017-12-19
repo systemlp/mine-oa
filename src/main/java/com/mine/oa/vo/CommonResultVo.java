@@ -13,9 +13,9 @@ import com.alibaba.fastjson.JSON;
  */
 public class CommonResultVo<T> {
 
-    public static final int SUCCESS_CODE = 200;
+    private static final int SUCCESS_CODE = 200;
 
-    public static final int WARN_CODE = 403;
+    private static final int WARN_CODE = 403;
 
     private int code;
     private String msg;
