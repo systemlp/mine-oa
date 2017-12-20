@@ -2,19 +2,66 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.mine.oa.mapper.EmployeeMapper">
     <sql id="Base_Column_List">
-        t.id,t.`name`,t.sex,t.card_type,t.card_no,t.mobile,t.address,t.user_id,t.position_id,t.state
+        t.id, t.`name`, t.sex, t.card_type, t.card_no, t.mobile, t.address, t.user_id, t.position_id, t.state
     </sql>
 
-    <select id="findByParam" resultType="DeptDto">
+    <select id="findByParam" resultType="EmployeePo">
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_employee t
         <where>
             <if test="state!=null">
-              t.state=#{state}
+                t.state=#{state}
             </if>
             <if test="positionId!=null">
                 AND t.position_id=#{positionId}
+            </if>
+        </where>
+    </select>
+
+    <select id="findByCondition" resultType="EmployeeDto">
+        SELECT
+        t.id,
+        t.id user_id,
+        t1.user_name,
+        t1.email,
+        t.`name`,
+        t.sex,
+        t.card_type,
+        t.card_no,
+        t.mobile,
+        t.address,
+        t.state,
+        t.position_id,
+        t2.`name` position_name,
+        t2.dept_id,
+        t3.`name` dept_name
+        FROM
+        `t_employee` t
+        INNER JOIN t_user t1 ON t.user_id = t1.id
+        INNER JOIN t_position t2 ON t.position_id = t2.id
+        INNER JOIN t_department t3 ON t2.dept_id = t3.id
+        <where>
+            <if test="state!=null">
+                t.state = #{state}
+            </if>
+            <if test="userId!=null">
+                AND t.user_id = #{userId}
+            </if>
+            <if test="userName!=null and userName!=''">
+                AND t1.user_name = #{userName}
+            </if>
+            <if test="name!=null and name!=''">
+                AND t.`name` = #{name}
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                AND t.mobile = #{mobile}
+            </if>
+            <if test="deptId!=null">
+                AND t2.dept_id = #{deptId}
+            </if>
+            <if test="positionId!=null">
+                AND t.position_id = #{positionId}
             </if>
         </where>
     </select>

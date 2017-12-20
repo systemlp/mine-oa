@@ -23,16 +23,13 @@ public class GlobalControllerExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalControllerExceptionHandler.class);
 
-    @ExceptionHandler(value = NoHandlerFoundException.class)
-    @ResponseStatus(HttpStatus.OK)
-    public CommonResultVo noHandlerFoundException(Exception e) {
-        LOGGER.error("路径错误异常", e);
-        return new CommonResultVo(404, "未找到对应请求路径。");
-    }
-
     @ExceptionHandler(value = Exception.class)
     @ResponseStatus(HttpStatus.OK)
     public CommonResultVo unknownException(Exception e) {
+        if (e instanceof NoHandlerFoundException) {
+            LOGGER.error("路径错误异常", e);
+            return new CommonResultVo(404, "未找到对应请求路径。");
+        }
         LOGGER.error("未捕获异常", e);
         return new CommonResultVo(500, "系统繁忙，请稍后再试。");
     }
