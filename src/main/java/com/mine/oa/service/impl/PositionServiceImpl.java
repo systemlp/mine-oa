@@ -5,6 +5,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.PageHelper;
@@ -44,35 +46,33 @@ public class PositionServiceImpl implements PositionService {
     private EmployeeMapper employeeMapper;
 
     @Override
-    public CommonResultVo<PageInfo<PositionDto>> querybyParam(PositionDto param) {
+    public CommonResultVo<PageInfo<PositionPo>> findByParam(PositionDto param) {
         PageHelper.startPage(param.getCurrent(), param.getPageSize());
-        List<PositionDto> deptList = positionMapper.queryByParam(param);
-        PageInfo<PositionDto> page = new PageInfo<>(deptList);
-        return new CommonResultVo<PageInfo<PositionDto>>().success(page);
+        List<PositionPo> deptList = positionMapper.findByParam(param);
+        PageInfo<PositionPo> page = new PageInfo<>(deptList);
+        return new CommonResultVo<PageInfo<PositionPo>>().success(page);
     }
 
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public CommonResultVo merge(PositionPo param, String token) {
         if (param == null || StringUtils.isAnyBlank(param.getName(), token)) {
             throw new InParamException("参数异常");
         }
-        DepartmentPo queryParam = new DepartmentPo();
-        queryParam.setId(param.getDeptId());
-        List<DepartmentPo> parentDept = deptMapper.queryByParam(queryParam);
-        if (CollectionUtils.isEmpty(parentDept)) {
-            throw new InParamException("参数异常");
-        }
-        if (parentDept.get(0).getState() == OaConstants.DELETE_STATE) {
-            return new CommonResultVo().warn("啊哦，在您操作期间所属部门被删除了，请重新选择吧-_-");
+        PositionDto positionDto = new PositionDto();
+        positionDto.setName(param.getName());
+        if (!CollectionUtils.isEmpty(positionMapper.findByParam(positionDto))) {
+            return new CommonResultVo().warn("已存在相同名称职位");
         }
         param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
         if (positionMapper.merge(param) < 1) {
-            throw new RuntimeException();
+            throw new InParamException("参数异常");
         }
         return new CommonResultVo().successMsg("修改成功");
     }
 
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public CommonResultVo delete(Integer id, String token) {
         if (id == null || StringUtils.isBlank(token)) {
             throw new InParamException("参数异常");
@@ -109,26 +109,18 @@ public class PositionServiceImpl implements PositionService {
     }
 
     @Override
-    public CommonResultVo insert(PositionPo param, String token) {
-        if (param == null || StringUtils.isAnyBlank(param.getName(), token) || param.getDeptId() == null) {
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public CommonResultVo insert(PositionDto param, String token) {
+        if (param == null || StringUtils.isAnyBlank(param.getName(), token)) {
             throw new InParamException("参数异常");
         }
-        PositionPo queryParam = new PositionPo();
-        queryParam.setName(param.getName());
-        if (!CollectionUtils.isEmpty(positionMapper.findByParam(queryParam))) {
+        if (!CollectionUtils.isEmpty(positionMapper.findByParam(param))) {
             return new CommonResultVo().warn("已存在相同名称职位");
         }
-        DepartmentPo queryDeptParam = new DepartmentPo();
-        queryDeptParam.setId(param.getDeptId());
-        List<DepartmentPo> dept = deptMapper.queryByParam(queryDeptParam);
-        if (CollectionUtils.isEmpty(dept)) {
-            throw new InParamException("参数异常");
-        }
-        if (dept.get(0).getState() == OaConstants.DELETE_STATE) {
-            return new CommonResultVo().warn("啊哦，在您操作期间所属部门被删除了，请重新选择吧-_-");
-        }
-        param.setCreateUserId(RsaUtil.getUserByToken(token).getId());
-        if (positionMapper.insert(param) < 1) {
+        PositionPo position = new PositionPo();
+        position.setName(param.getName());
+        position.setCreateUserId(RsaUtil.getUserByToken(token).getId());
+        if (positionMapper.insert(position) < 1) {
             throw new InParamException("参数异常");
         }
         return new CommonResultVo().successMsg("新增成功");

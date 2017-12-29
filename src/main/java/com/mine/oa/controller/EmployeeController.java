@@ -1,10 +1,8 @@
 package com.mine.oa.controller;
 
+import com.mine.oa.dto.EmployeeDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.mine.oa.dto.EmployeeQueryDto;
 import com.mine.oa.service.EmployeeService;
@@ -29,6 +27,11 @@ public class EmployeeController {
     @PostMapping("/findPageByParam")
     public CommonResultVo findPageByParam(@RequestBody EmployeeQueryDto param) {
         return employeeService.findPageByParam(param);
+    }
+
+    @PostMapping("/modify")
+    public CommonResultVo modify(@RequestBody EmployeeDto param, @RequestHeader String token){
+        return employeeService.modify(param,token);
     }
 
 }

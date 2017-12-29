@@ -26,26 +26,26 @@ public class PositionController {
 
     @PostMapping("/findPageByParam")
     public CommonResultVo findPageByParam(@RequestBody PositionDto param) {
-        return positionService.querybyParam(param);
+        return positionService.findByParam(param);
     }
 
     @PostMapping("/merge")
-    public CommonResultVo merge(@RequestBody PositionPo param, @RequestHeader String token){
+    public CommonResultVo merge(@RequestBody PositionPo param, @RequestHeader String token) {
         return positionService.merge(param, token);
     }
 
     @GetMapping("/delete/{id}")
-    public CommonResultVo delete(@PathVariable Integer id, @RequestHeader String token){
+    public CommonResultVo delete(@PathVariable Integer id, @RequestHeader String token) {
         return positionService.delete(id, token);
     }
 
     @GetMapping("/enable/{id}")
-    public CommonResultVo enable(@PathVariable Integer id, @RequestHeader String token){
+    public CommonResultVo enable(@PathVariable Integer id, @RequestHeader String token) {
         return positionService.enable(id, token);
     }
 
     @PostMapping("/insert")
-    public CommonResultVo insert(@RequestBody PositionPo param, @RequestHeader String token){
+    public CommonResultVo insert(@RequestBody PositionDto param, @RequestHeader String token) {
         return positionService.insert(param, token);
     }
 

@@ -57,7 +57,7 @@ public class AlgorithmTest {
     }
 
     /***
-     * 选择排揎，每次找到数组中最大或最小数字与第i个数字交换位置
+     * 选择排序，每次找到数组中最大或最小数字与第i个数字交换位置
      */
     @Test
     public void testSelectSort() throws InterruptedException {

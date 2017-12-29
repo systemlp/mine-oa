@@ -16,7 +16,7 @@ import com.mine.oa.vo.CommonResultVo;
  */
 public interface PositionService {
 
-    CommonResultVo<PageInfo<PositionDto>> querybyParam(PositionDto param);
+    CommonResultVo<PageInfo<PositionPo>> findByParam(PositionDto param);
 
     CommonResultVo merge(PositionPo param, String token);
 
@@ -24,6 +24,6 @@ public interface PositionService {
 
     CommonResultVo enable(Integer id, String token);
 
-    CommonResultVo insert(PositionPo param, String token);
+    CommonResultVo insert(PositionDto param, String token);
 
 }

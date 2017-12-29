@@ -21,6 +21,8 @@ public interface DeptMapper {
 
     List<DepartmentPo> queryByParam(DepartmentPo param);
 
+    int getNameCount(DepartmentPo param);
+
     int merge(DepartmentPo param);
 
     int updateState(DepartmentPo param);

@@ -3,6 +3,7 @@ package com.mine.oa.service;
 import com.github.pagehelper.PageInfo;
 import com.mine.oa.dto.EmployeeDto;
 import com.mine.oa.dto.EmployeeQueryDto;
+import com.mine.oa.entity.EmployeePo;
 import com.mine.oa.vo.CommonResultVo;
 
 /***
@@ -17,5 +18,7 @@ import com.mine.oa.vo.CommonResultVo;
 public interface EmployeeService {
 
     CommonResultVo<PageInfo<EmployeeDto>> findPageByParam(EmployeeQueryDto param);
+
+    CommonResultVo modify(EmployeeDto param,String token);
 
 }

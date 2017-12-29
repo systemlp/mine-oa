@@ -20,4 +20,6 @@ public interface EmployeeMapper {
     List<EmployeePo> findByParam(EmployeePo param);
 
     List<EmployeeDto> findByCondition(EmployeeQueryDto param);
+
+    int modify(EmployeePo param);
 }

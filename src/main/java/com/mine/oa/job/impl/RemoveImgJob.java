@@ -1,4 +1,4 @@
-package com.mine.oa.job.com.mine.oa.job.impl;
+package com.mine.oa.job.impl;
 
 import com.mine.oa.constant.OaConstants;
 import com.mine.oa.job.TimedTask;

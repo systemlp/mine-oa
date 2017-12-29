@@ -3,26 +3,28 @@ package com.mine.oa.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import com.mine.oa.constant.OaConstants;
-import com.mine.oa.entity.PositionPo;
-import com.mine.oa.mapper.PositionMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mine.oa.constant.OaConstants;
 import com.mine.oa.dto.DeptDto;
 import com.mine.oa.dto.DeptQueryDto;
 import com.mine.oa.entity.DepartmentPo;
+import com.mine.oa.entity.EmployeePo;
 import com.mine.oa.exception.InParamException;
 import com.mine.oa.mapper.DeptMapper;
+import com.mine.oa.mapper.EmployeeMapper;
 import com.mine.oa.service.DeptService;
 import com.mine.oa.util.RsaUtil;
 import com.mine.oa.vo.CommonResultVo;
-import org.springframework.util.CollectionUtils;
 
 /***
  *
@@ -41,7 +43,7 @@ public class DeptServiceImpl implements DeptService {
     @Autowired
     private DeptMapper deptMapper;
     @Autowired
-    private PositionMapper positionMapper;
+    private EmployeeMapper employeeMapper;
 
     @Override
     public CommonResultVo<PageInfo<DeptDto>> findPageByParam(DeptQueryDto param) {
@@ -74,9 +76,13 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public CommonResultVo update(DepartmentPo param, String token) {
         if (param == null || StringUtils.isAnyBlank(param.getName(), token)) {
             throw new InParamException("参数异常");
+        }
+        if (deptMapper.getNameCount(param) > 0) {
+            return new CommonResultVo().warn("已存在相同名称部门");
         }
         DepartmentPo queryParam = new DepartmentPo();
         queryParam.setId(param.getParentId());
@@ -95,6 +101,7 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public CommonResultVo delete(Integer id, String token) {
         if (id == null || StringUtils.isBlank(token)) {
             throw new InParamException("参数异常");
@@ -108,14 +115,14 @@ public class DeptServiceImpl implements DeptService {
         if (!CollectionUtils.isEmpty(deptList)) {
             msg = "无法删除，该部门下存在子部门";
         }
-        PositionPo positionPo = new PositionPo();
-        positionPo.setDeptId(id);
-        positionPo.setState(OaConstants.NORMAL_STATE);
-        if (!CollectionUtils.isEmpty(positionMapper.findByParam(positionPo))) {
+        EmployeePo employeePo = new EmployeePo();
+        employeePo.setDeptId(id);
+        employeePo.setState(OaConstants.NORMAL_STATE);
+        if (!CollectionUtils.isEmpty(employeeMapper.findByParam(employeePo))) {
             if (StringUtils.isBlank(msg)) {
-                msg = "无法删除，该部门下存在职位";
+                msg = "无法删除，该职位下存在员工";
             } else {
-                msg += "及职位";
+                msg += "及员工";
             }
         }
         if (StringUtils.isNotBlank(msg)) {
@@ -153,13 +160,14 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public CommonResultVo insert(DepartmentPo param, String token) {
         if (param == null || StringUtils.isAnyBlank(param.getName(), token)) {
             throw new InParamException("参数异常");
         }
         DepartmentPo queryParam = new DepartmentPo();
         queryParam.setName(param.getName());
-        if (!CollectionUtils.isEmpty(deptMapper.queryByParam(queryParam))) {
+        if (deptMapper.getNameCount(queryParam) > 0) {
             return new CommonResultVo().warn("已存在相同名称部门");
         }
         queryParam.setName(null);

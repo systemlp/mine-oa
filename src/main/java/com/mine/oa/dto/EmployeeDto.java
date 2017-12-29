@@ -1,5 +1,7 @@
 package com.mine.oa.dto;
 
+import java.util.Date;
+
 /***
  *
  * 〈一句话功能简述〉<br>
@@ -23,6 +25,7 @@ public class EmployeeDto {
     private String address;
     private Integer state;
     private Integer positionId;
+    private Date entryDate;
     private String positionName;
     private Integer deptId;
     private String deptName;
@@ -145,5 +148,13 @@ public class EmployeeDto {
 
     public void setDeptName(String deptName) {
         this.deptName = deptName;
+    }
+
+    public Date getEntryDate() {
+        return entryDate;
+    }
+
+    public void setEntryDate(Date entryDate) {
+        this.entryDate = entryDate;
     }
 }

@@ -1,9 +1,9 @@
 package com.mine.oa.mapper;
 
+import java.util.List;
+
 import com.mine.oa.dto.PositionDto;
 import com.mine.oa.entity.PositionPo;
-
-import java.util.List;
 
 /***
  *
@@ -16,9 +16,7 @@ import java.util.List;
  */
 public interface PositionMapper {
 
-    List<PositionPo> findByParam(PositionPo param);
-
-    List<PositionDto> queryByParam(PositionDto param);
+    List<PositionPo> findByParam(PositionDto param);
 
     int merge(PositionPo param);
 

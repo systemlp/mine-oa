@@ -1,5 +1,7 @@
 package com.mine.oa.entity;
 
+import java.util.Date;
+
 /***
  *
  * 〈一句话功能简述〉<br>
@@ -19,7 +21,9 @@ public class EmployeePo extends CommonPo {
     private String mobile;
     private String address;
     private Integer userId;
+    private Integer deptId;
     private Integer positionId;
+    private Date entryDate;
 
     public Integer getId() {
         return id;
@@ -85,11 +89,27 @@ public class EmployeePo extends CommonPo {
         this.userId = userId;
     }
 
+    public Integer getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Integer deptId) {
+        this.deptId = deptId;
+    }
+
     public Integer getPositionId() {
         return positionId;
     }
 
     public void setPositionId(Integer positionId) {
         this.positionId = positionId;
+    }
+
+    public Date getEntryDate() {
+        return entryDate;
+    }
+
+    public void setEntryDate(Date entryDate) {
+        this.entryDate = entryDate;
     }
 }

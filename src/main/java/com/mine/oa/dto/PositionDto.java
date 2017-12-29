@@ -13,8 +13,6 @@ public class PositionDto extends PageQueryDto {
 
     private Integer id;
     private String name;
-    private Integer deptId;
-    private String deptName;
     private Integer state;
 
     public Integer getId() {
@@ -31,22 +29,6 @@ public class PositionDto extends PageQueryDto {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getDeptId() {
-        return deptId;
-    }
-
-    public void setDeptId(Integer deptId) {
-        this.deptId = deptId;
-    }
-
-    public String getDeptName() {
-        return deptName;
-    }
-
-    public void setDeptName(String deptName) {
-        this.deptName = deptName;
     }
 
     public Integer getState() {

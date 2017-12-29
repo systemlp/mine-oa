@@ -13,7 +13,6 @@ public class PositionPo extends CommonPo {
 
     private Integer id;
     private String name;
-    private Integer deptId;
 
     public Integer getId() {
         return id;
@@ -29,13 +28,5 @@ public class PositionPo extends CommonPo {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getDeptId() {
-        return deptId;
-    }
-
-    public void setDeptId(Integer deptId) {
-        this.deptId = deptId;
     }
 }

@@ -47,6 +47,20 @@
         </where>
     </select>
 
+    <select id="getNameCount" resultType="int">
+        SELECT
+          COUNT(1)
+        FROM t_department t
+        <where>
+            <if test="name!=null and name!=''">
+                t.`name`=#{name}
+            </if>
+            <if test="id!=null">
+                AND t.id!=#{id}
+            </if>
+        </where>
+    </select>
+
     <update id="merge">
       UPDATE t_department SET `name`=#{name},parent_id=#{parentId},update_time=NOW(),update_user_id=#{updateUserId} WHERE id=#{id}
     </update>
