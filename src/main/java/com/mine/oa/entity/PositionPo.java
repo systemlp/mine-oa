@@ -1,5 +1,10 @@
 package com.mine.oa.entity;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /***
  *
  * 〈一句话功能简述〉<br>
@@ -9,8 +14,11 @@ package com.mine.oa.entity;
  * @see [相关类/方法]（可选）
  * @since [产品/模块版本] （可选）
  */
+@Table(name = "t_position")
 public class PositionPo extends CommonPo {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
 

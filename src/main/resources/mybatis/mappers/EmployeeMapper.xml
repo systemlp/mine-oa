@@ -25,7 +25,7 @@
     <select id="findByCondition" resultType="EmployeeDto">
         SELECT
         t.id,
-        t.id user_id,
+        t1.id user_id,
         t1.user_name,
         t1.email,
         t.`name`,

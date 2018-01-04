@@ -3,6 +3,7 @@ package com.mine.oa.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.mine.oa.service.DaoService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,8 @@ import com.mine.oa.mapper.EmployeeMapper;
 import com.mine.oa.service.DeptService;
 import com.mine.oa.util.RsaUtil;
 import com.mine.oa.vo.CommonResultVo;
+import tk.mybatis.mapper.common.Mapper;
+import tk.mybatis.mapper.entity.Example;
 
 /***
  *
@@ -60,7 +63,9 @@ public class DeptServiceImpl implements DeptService {
         }
         DepartmentPo param = new DepartmentPo();
         param.setState(OaConstants.NORMAL_STATE);
-        List<DepartmentPo> deptList = deptMapper.queryByParam(param);
+        Example example = new Example(DepartmentPo.class);
+        example.createCriteria().andEqualTo("state", OaConstants.NORMAL_STATE);
+        List<DepartmentPo> deptList = deptMapper.selectByExample(example);
         param.setId(id);
         Map<Integer, DepartmentPo> deptMap = Maps.newHashMap();
         for (DepartmentPo departmentPo : deptList) {
@@ -84,13 +89,11 @@ public class DeptServiceImpl implements DeptService {
         if (deptMapper.getNameCount(param) > 0) {
             return new CommonResultVo().warn("已存在相同名称部门");
         }
-        DepartmentPo queryParam = new DepartmentPo();
-        queryParam.setId(param.getParentId());
-        List<DepartmentPo> parentDept = deptMapper.queryByParam(queryParam);
-        if (CollectionUtils.isEmpty(parentDept)) {
+        DepartmentPo parentDept = deptMapper.selectByPrimaryKey(param.getParentId());
+        if (parentDept == null) {
             throw new InParamException("参数异常");
         }
-        if (parentDept.get(0).getState() == OaConstants.DELETE_STATE) {
+        if (parentDept.getState() == OaConstants.DELETE_STATE) {
             return new CommonResultVo().warn("啊哦，在您操作期间父级部门被删除了，请重新选择吧-_-");
         }
         param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());

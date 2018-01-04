@@ -1,5 +1,6 @@
 package com.mine.oa.entity;
 
+import javax.persistence.Column;
 import java.util.Date;
 
 /***

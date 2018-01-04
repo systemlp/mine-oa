@@ -1,5 +1,9 @@
 package com.mine.oa.entity;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 /***
@@ -11,8 +15,11 @@ import java.util.Date;
  * @see [相关类/方法]（可选）
  * @since [产品/模块版本] （可选）
  */
+@Table(name = "t_user")
 public class UserPo extends CommonPo {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String userName;
     private String password;

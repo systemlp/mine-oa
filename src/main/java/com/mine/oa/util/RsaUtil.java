@@ -16,13 +16,9 @@ public final class RsaUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RsaUtil.class);
     /** 密钥对文件位置 */
-    private static String KEY_FILE_URL;
+    private static String KEY_FILE_URL = System.getProperty("user.dir") + "/rsaKey.ini";
     /** 密钥长度 */
     private static final int KEY_LENGTH = 512;
-
-    static {
-        KEY_FILE_URL = System.getProperty("user.dir") + "/rsaKey.ini";
-    }
 
     /***
      * 生成密钥对并存储成文件

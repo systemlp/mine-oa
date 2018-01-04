@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mine.oa.dto.PositionDto;
 import com.mine.oa.entity.PositionPo;
+import com.mine.oa.util.BaseMapper;
 
 /***
  *
@@ -14,7 +15,7 @@ import com.mine.oa.entity.PositionPo;
  * @see [相关类/方法]（可选）
  * @since [产品/模块版本] （可选）
  */
-public interface PositionMapper {
+public interface PositionMapper extends BaseMapper<PositionPo> {
 
     List<PositionPo> findByParam(PositionDto param);
 
