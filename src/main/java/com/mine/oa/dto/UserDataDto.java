@@ -15,8 +15,8 @@ public class UserDataDto {
     private String email;
     private String photoUrl;
     private String name;
-    private String sex;
-    private String cardType;
+    private Integer sex;
+    private Integer cardType;
     private String cardNo;
     private String mobile;
     private String address;
@@ -55,19 +55,19 @@ public class UserDataDto {
         this.name = name;
     }
 
-    public String getSex() {
+    public Integer getSex() {
         return sex;
     }
 
-    public void setSex(String sex) {
+    public void setSex(Integer sex) {
         this.sex = sex;
     }
 
-    public String getCardType() {
+    public Integer getCardType() {
         return cardType;
     }
 
-    public void setCardType(String cardType) {
+    public void setCardType(Integer cardType) {
         this.cardType = cardType;
     }
 

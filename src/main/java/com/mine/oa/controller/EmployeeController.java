@@ -30,8 +30,23 @@ public class EmployeeController {
     }
 
     @PostMapping("/modify")
-    public CommonResultVo modify(@RequestBody EmployeeDto param, @RequestHeader String token){
-        return employeeService.modify(param,token);
+    public CommonResultVo modify(@RequestBody EmployeeDto param, @RequestHeader String token) {
+        return employeeService.modify(param, token);
+    }
+
+    @PostMapping("/insert")
+    public CommonResultVo insert(@RequestBody EmployeeDto param, @RequestHeader String token) {
+        return employeeService.insert(param, token);
+    }
+
+    @GetMapping("/{id}/leave")
+    public CommonResultVo leave(@PathVariable Integer id, @RequestHeader String token) {
+        return employeeService.leave(id, token);
+    }
+
+    @GetMapping("/{id}/enable")
+    public CommonResultVo enable(@PathVariable Integer id, @RequestHeader String token) {
+        return employeeService.enable(id, token);
     }
 
 }

@@ -63,9 +63,9 @@ public class DeptServiceImpl implements DeptService {
         }
         DepartmentPo param = new DepartmentPo();
         param.setState(OaConstants.NORMAL_STATE);
-        Example example = new Example(DepartmentPo.class);
-        example.createCriteria().andEqualTo("state", OaConstants.NORMAL_STATE);
-        List<DepartmentPo> deptList = deptMapper.selectByExample(example);
+        // Example example = new Example(DepartmentPo.class);
+        // example.createCriteria().andEqualTo("state", OaConstants.NORMAL_STATE);
+        List<DepartmentPo> deptList = deptMapper.select(param);
         param.setId(id);
         Map<Integer, DepartmentPo> deptMap = Maps.newHashMap();
         for (DepartmentPo departmentPo : deptList) {
@@ -112,7 +112,7 @@ public class DeptServiceImpl implements DeptService {
         DepartmentPo param = new DepartmentPo();
         param.setParentId(id);
         param.setState(OaConstants.NORMAL_STATE);
-        List<DepartmentPo> deptList = deptMapper.queryByParam(param);
+        List<DepartmentPo> deptList = deptMapper.select(param);
         param.setId(id);
         String msg = "";
         if (!CollectionUtils.isEmpty(deptList)) {
@@ -158,7 +158,7 @@ public class DeptServiceImpl implements DeptService {
     public CommonResultVo<List<DepartmentPo>> findOptional() {
         DepartmentPo param = new DepartmentPo();
         param.setState(OaConstants.NORMAL_STATE);
-        List<DepartmentPo> deptList = deptMapper.queryByParam(param);
+        List<DepartmentPo> deptList = deptMapper.select(param);
         return new CommonResultVo<List<DepartmentPo>>().success(deptList);
     }
 

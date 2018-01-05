@@ -21,4 +21,10 @@ public interface EmployeeService {
 
     CommonResultVo modify(EmployeeDto param,String token);
 
+    CommonResultVo insert(EmployeeDto param,String token);
+
+    CommonResultVo leave(Integer id,String token);
+
+    CommonResultVo enable(Integer id,String token);
+
 }

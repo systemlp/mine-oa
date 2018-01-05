@@ -17,5 +17,7 @@ public final class OaConstants {
     public static final int NORMAL_STATE = 1;
     /** 默认用户头像 */
     public static final String DEFAULT_PHOTO = "defaultPhoto.jpg";
+    /** 默认用户密码 */
+    public static final String DEFAULT_PASSWORD = "123456";
 
 }
