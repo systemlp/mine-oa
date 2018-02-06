@@ -12,7 +12,7 @@ import javax.persistence.*;
  * @since [产品/模块版本] （可选）
  */
 @Table(name = "t_department")
-public class DepartmentPo extends CommonPo {
+public class DepartmentPO extends CommonPO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,7 +2,7 @@ package com.mine.oa.service;
 
 import com.github.pagehelper.PageInfo;
 import com.mine.oa.dto.PositionDto;
-import com.mine.oa.entity.PositionPo;
+import com.mine.oa.entity.PositionPO;
 import com.mine.oa.vo.CommonResultVo;
 
 /***
@@ -16,9 +16,9 @@ import com.mine.oa.vo.CommonResultVo;
  */
 public interface PositionService {
 
-    CommonResultVo<PageInfo<PositionPo>> findByParam(PositionDto param);
+    CommonResultVo<PageInfo<PositionPO>> findByParam(PositionDto param);
 
-    CommonResultVo merge(PositionPo param, String token);
+    CommonResultVo merge(PositionPO param, String token);
 
     CommonResultVo delete(Integer id, String token);
 

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mine.oa.mapper.MenuMapper">
+
+    <select id="updateCheckExists" resultType="MenuPO">
+        SELECT *
+        FROM t_menu t
+        WHERE t.id != #{id}
+              AND t.title = #{title}
+              AND t.url = #{url}
+              AND t.state = #{state}
+    </select>
+
+    <select id="findAll" resultType="MenuPO">
+        SELECT *
+        FROM t_menu t
+        <where>
+            t.state = #{state}
+        </where>
+        ORDER BY parent_id,sort
+    </select>
+
+
+</mapper>

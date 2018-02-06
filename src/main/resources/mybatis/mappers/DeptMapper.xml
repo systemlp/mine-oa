@@ -27,7 +27,7 @@
         </where>
     </select>
 
-    <select id="queryByParam" resultType="DepartmentPo">
+    <select id="queryByParam" resultType="DepartmentPO">
         SELECT
         <include refid="Dept_Column_List"/>
         FROM t_department t

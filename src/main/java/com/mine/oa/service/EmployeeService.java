@@ -3,7 +3,6 @@ package com.mine.oa.service;
 import com.github.pagehelper.PageInfo;
 import com.mine.oa.dto.EmployeeDto;
 import com.mine.oa.dto.EmployeeQueryDto;
-import com.mine.oa.entity.EmployeePo;
 import com.mine.oa.vo.CommonResultVo;
 
 /***

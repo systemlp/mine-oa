@@ -1,8 +1,7 @@
 package com.mine.oa.mapper;
 
 import com.mine.oa.TestBase;
-import com.mine.oa.entity.UserPo;
-import com.mine.oa.mapper.UserMapper;
+import com.mine.oa.entity.UserPO;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,7 +25,7 @@ public class TestUserMapper extends TestBase {
 
     @Test
     public void testUpdate() {
-        UserPo userPo = new UserPo();
+        UserPO userPo = new UserPO();
         userPo.setId(1);
         userPo.setEmail("");
         System.out.println(userMapper.updateByPrimaryKeySelective(userPo));
@@ -34,7 +33,7 @@ public class TestUserMapper extends TestBase {
 
     @Test
     public void testInsert() {
-        UserPo userPo = new UserPo();
+        UserPO userPo = new UserPO();
         userPo.setUserName("wfwww");
         userPo.setPassword("12313");
         userPo.setEmail("wfwww");

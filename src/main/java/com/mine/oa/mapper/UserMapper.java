@@ -1,7 +1,7 @@
 package com.mine.oa.mapper;
 
 import com.mine.oa.dto.UserDataDto;
-import com.mine.oa.entity.UserPo;
+import com.mine.oa.entity.UserPO;
 import com.mine.oa.util.BaseMapper;
 
 import java.util.List;
@@ -15,17 +15,17 @@ import java.util.List;
  * @see [相关类/方法]（可选）
  * @since [产品/模块版本] （可选）
  */
-public interface UserMapper extends BaseMapper<UserPo> {
+public interface UserMapper extends BaseMapper<UserPO> {
 
-    List<UserPo> findAll();
+    List<UserPO> findAll();
 
-    UserPo getByCondition(UserPo userPo);
+    UserPO getByCondition(UserPO userPo);
 
-    int updatePwd(UserPo userPo);
+    int updatePwd(UserPO userPo);
 
     UserDataDto findDataByUserName(String userName);
 
-    int updatePhoto(UserPo userPo);
+    int updatePhoto(UserPO userPo);
 
     List<String> findAllPhoto();
 

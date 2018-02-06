@@ -10,7 +10,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mine.oa.entity.UserPo;
+import com.mine.oa.entity.UserPO;
 
 public final class RsaUtil {
 
@@ -184,12 +184,12 @@ public final class RsaUtil {
         }
     }
 
-    public static UserPo getUserByToken(String token) {
+    public static UserPO getUserByToken(String token) {
         try {
             String tokenPlain = decrypt(getKeyPair().getPrivate(), hexString2Bytes(token));
             assert tokenPlain != null;
             String[] array = tokenPlain.split(" ");
-            UserPo user = new UserPo();
+            UserPO user = new UserPO();
             user.setId(Integer.parseInt(array[0]));
             user.setUserName(array[1]);
             return user;

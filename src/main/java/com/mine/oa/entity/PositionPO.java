@@ -15,7 +15,7 @@ import javax.persistence.Table;
  * @since [产品/模块版本] （可选）
  */
 @Table(name = "t_position")
-public class PositionPo extends CommonPo {
+public class PositionPO extends CommonPO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

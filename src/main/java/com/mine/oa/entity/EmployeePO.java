@@ -16,7 +16,7 @@ import java.util.Date;
  * @since [产品/模块版本] （可选）
  */
 @Table(name = "t_employee")
-public class EmployeePo extends CommonPo {
+public class EmployeePO extends CommonPO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -18,10 +18,10 @@ import com.github.pagehelper.PageInfo;
 import com.mine.oa.constant.OaConstants;
 import com.mine.oa.dto.EmployeeDto;
 import com.mine.oa.dto.EmployeeQueryDto;
-import com.mine.oa.entity.DepartmentPo;
-import com.mine.oa.entity.EmployeePo;
-import com.mine.oa.entity.PositionPo;
-import com.mine.oa.entity.UserPo;
+import com.mine.oa.entity.DepartmentPO;
+import com.mine.oa.entity.EmployeePO;
+import com.mine.oa.entity.PositionPO;
+import com.mine.oa.entity.UserPO;
 import com.mine.oa.exception.InParamException;
 import com.mine.oa.mapper.DeptMapper;
 import com.mine.oa.mapper.EmployeeMapper;
@@ -72,14 +72,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (param.getId() == null) {
             throw new InParamException("参数异常");
         }
-        UserPo loginUser = RsaUtil.getUserByToken(token);
+        UserPO loginUser = RsaUtil.getUserByToken(token);
         Date now = new Date();
-        UserPo userPo = new UserPo();
+        UserPO userPo = new UserPO();
         userPo.setId(param.getUserId());
         userPo.setEmail(param.getEmail());
         userPo.setUpdateUserId(loginUser.getId());
         userPo.setUpdateTime(now);
-        EmployeePo employee = new EmployeePo();
+        EmployeePO employee = new EmployeePO();
         employee.setUpdateUserId(loginUser.getId());
         employee.setUpdateTime(now);
         BeanUtils.copyProperties(param, employee);
@@ -97,17 +97,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (checkResult != null) {
             return checkResult;
         }
-        UserPo queryParam = new UserPo();
+        UserPO queryParam = new UserPO();
         queryParam.setUserName(param.getUserName());
         if (userMapper.selectOne(queryParam) != null) {
             return new CommonResultVo().warn("用户名已存在");
         }
-        UserPo loginUser = RsaUtil.getUserByToken(token);
-        UserPo userPo = this.initUser(param, loginUser);
+        UserPO loginUser = RsaUtil.getUserByToken(token);
+        UserPO userPo = this.initUser(param, loginUser);
         if (userMapper.insertSelective(userPo) < 1) {
             throw new InParamException("参数异常");
         }
-        EmployeePo employee = new EmployeePo();
+        EmployeePO employee = new EmployeePO();
         BeanUtils.copyProperties(param, employee);
         employee.setUserId(userPo.getId());
         employee.setCreateUserId(loginUser.getId());
@@ -125,6 +125,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional
     public CommonResultVo enable(Integer id, String token) {
         changeState(id, token, OaConstants.NORMAL_STATE);
         return new CommonResultVo().successMsg("恢复成功，对应用户已重新启用");
@@ -138,14 +139,14 @@ public class EmployeeServiceImpl implements EmployeeService {
                         param.getPositionId())) {
             throw new InParamException("参数异常");
         }
-        DepartmentPo dept = deptMapper.selectByPrimaryKey(param.getDeptId());
+        DepartmentPO dept = deptMapper.selectByPrimaryKey(param.getDeptId());
         if (dept == null) {
             throw new InParamException(String.format("dept id不存在%s", param.getDeptId()));
         }
         if (OaConstants.DELETE_STATE == dept.getState()) {
             return new CommonResultVo().warn("啊哦，在您操作期间所属部门已被删除啦");
         }
-        PositionPo posi = positionMapper.selectByPrimaryKey(param.getPositionId());
+        PositionPO posi = positionMapper.selectByPrimaryKey(param.getPositionId());
         if (posi == null) {
             throw new InParamException(String.format("position id不存在%s", param.getPositionId()));
         }
@@ -155,8 +156,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         return null;
     }
 
-    private UserPo initUser(EmployeeDto param, UserPo loginUser) {
-        UserPo userPo = new UserPo();
+    private UserPO initUser(EmployeeDto param, UserPO loginUser) {
+        UserPO userPo = new UserPO();
         userPo.setUserName(param.getUserName());
         userPo.setPassword(DigestUtils.sha256Hex(OaConstants.DEFAULT_PASSWORD + param.getUserName()));
         userPo.setEmail(param.getEmail());
@@ -169,22 +170,22 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (id == null || id < 1 || StringUtils.isBlank(token)) {
             throw new InParamException("参数异常");
         }
-        EmployeePo emp = employeeMapper.selectByPrimaryKey(id);
+        EmployeePO emp = employeeMapper.selectByPrimaryKey(id);
         if (emp == null) {
             throw new InParamException(String.format("employee id不存在%s", id));
         }
-        UserPo user = userMapper.selectByPrimaryKey(emp.getUserId());
+        UserPO user = userMapper.selectByPrimaryKey(emp.getUserId());
         if (user == null) {
             throw new InParamException(String.format("user id不存在%s", emp.getUserId()));
         }
         Date now = new Date();
-        UserPo loginUser = RsaUtil.getUserByToken(token);
-        EmployeePo leaveEmp = new EmployeePo();
+        UserPO loginUser = RsaUtil.getUserByToken(token);
+        EmployeePO leaveEmp = new EmployeePO();
         leaveEmp.setId(id);
         leaveEmp.setUpdateTime(now);
         leaveEmp.setUpdateUserId(loginUser.getId());
         leaveEmp.setState(state);
-        UserPo leaveUser = new UserPo();
+        UserPO leaveUser = new UserPO();
         leaveUser.setId(emp.getUserId());
         leaveUser.setUpdateTime(now);
         leaveUser.setUpdateUserId(loginUser.getId());

@@ -5,13 +5,13 @@
         `id`, `user_name`, `password`, `email`, `photo_url`, `last_login_time`, `login_fail_count`, `unlock_time`, `login_ip`, `state`, `create_time`, `create_user_id`, `update_time`, `update_user_id`
     </sql>
 
-    <select id="findAll" resultType="UserPo">
+    <select id="findAll" resultType="UserPO">
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_user
     </select>
 
-    <select id="getByCondition" resultType="UserPo">
+    <select id="getByCondition" resultType="UserPO">
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_user

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.mine.oa.dto.DeptQueryDto;
-import com.mine.oa.entity.DepartmentPo;
+import com.mine.oa.entity.DepartmentPO;
 import com.mine.oa.service.DeptService;
 import com.mine.oa.vo.CommonResultVo;
 
@@ -40,7 +40,7 @@ public class DeptController {
     }
 
     @PostMapping("/merge")
-    public CommonResultVo merge(@RequestBody DepartmentPo param, @RequestHeader String token) {
+    public CommonResultVo merge(@RequestBody DepartmentPO param, @RequestHeader String token) {
         return deptService.update(param, token);
     }
 
@@ -55,7 +55,7 @@ public class DeptController {
     }
 
     @PostMapping("/insert")
-    public CommonResultVo insert(@RequestBody DepartmentPo param, @RequestHeader String token) {
+    public CommonResultVo insert(@RequestBody DepartmentPO param, @RequestHeader String token) {
         return deptService.insert(param, token);
     }
 

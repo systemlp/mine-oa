@@ -1,5 +1,7 @@
 package com.mine.oa.exception;
 
+import org.apache.commons.lang3.StringUtils;
+
 /***
  *
  * 〈输入参数异常〉<br>
@@ -16,6 +18,6 @@ public class InParamException extends RuntimeException {
     }
 
     public InParamException(String message) {
-        super(message);
+        super(StringUtils.isBlank(message) ? "参数异常" : message);
     }
 }

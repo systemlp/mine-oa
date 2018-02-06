@@ -1,17 +1,14 @@
 package com.mine.oa.mapper;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mine.oa.TestBase;
 import com.mine.oa.dto.DeptDto;
-import com.mine.oa.entity.DepartmentPo;
+import com.mine.oa.entity.DepartmentPO;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by admin on 2017-10-27.
@@ -33,11 +30,11 @@ public class DeptMapperTest extends TestBase {
     @Test
     public void queryByParam() throws Exception {
         PageHelper.startPage(1,1);
-        DepartmentPo param = new DepartmentPo();
+        DepartmentPO param = new DepartmentPO();
         param.setState(1);
-        List<DepartmentPo> list = deptMapper.queryByParam(param);
+        List<DepartmentPO> list = deptMapper.queryByParam(param);
         System.out.println(list);
-        PageInfo<DepartmentPo> page = new PageInfo<>(list);
+        PageInfo<DepartmentPO> page = new PageInfo<>(list);
         System.out.println(page);
     }
 

@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.mine.oa.dto.UserDataDto;
 import com.mine.oa.dto.UserLoginDto;
-import com.mine.oa.entity.UserPo;
+import com.mine.oa.entity.UserPO;
 import com.mine.oa.vo.CommonResultVo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +21,7 @@ public interface UserService {
 
     CommonResultVo<Map> login(UserLoginDto loginDto);
 
-    CommonResultVo<UserPo> getByToken(String token);
+    CommonResultVo<UserPO> getByToken(String token);
 
     CommonResultVo updatePwd(String token, String oldPwd, String newPwd);
 

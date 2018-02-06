@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.common.collect.Maps;
 import com.mine.oa.dto.UserDataDto;
 import com.mine.oa.dto.UserLoginDto;
-import com.mine.oa.entity.UserPo;
+import com.mine.oa.entity.UserPO;
 import com.mine.oa.exception.InParamException;
 import com.mine.oa.mapper.UserMapper;
 import com.mine.oa.service.UserService;
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
             throw new InParamException("登录参数异常");
         }
         CommonResultVo<Map> resultVo = new CommonResultVo<>();
-        UserPo userPo = new UserPo();
+        UserPO userPo = new UserPO();
         userPo.setUserName(loginDto.getUserName());
         userPo.setPassword(DigestUtils.sha256Hex(loginDto.getPassword() + loginDto.getUserName()));
         userPo = userMapper.getByCondition(userPo);
@@ -64,11 +64,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CommonResultVo<UserPo> getByToken(String token) {
+    public CommonResultVo<UserPO> getByToken(String token) {
         if (StringUtils.isBlank(token)) {
             throw new InParamException("token异常");
         }
-        UserPo userPo = RsaUtil.getUserByToken(token);
+        UserPO userPo = RsaUtil.getUserByToken(token);
         userPo = userMapper.getByCondition(userPo);
         if (userPo == null) {
             throw new InParamException("token异常");
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isNotBlank(userPo.getPhotoUrl())) {
             userPo.setPhotoUrl(FileUtil.getImgBase64(userPo.getPhotoUrl()));
         }
-        return new CommonResultVo<UserPo>().success(userPo);
+        return new CommonResultVo<UserPO>().success(userPo);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isAnyBlank(token, oldPwd, newPwd)) {
             throw new InParamException("参数异常");
         }
-        UserPo userPo = RsaUtil.getUserByToken(token);
+        UserPO userPo = RsaUtil.getUserByToken(token);
         Integer userId = userPo.getId();
         String userName = userPo.getUserName();
         userPo.setPassword(DigestUtils.sha256Hex(oldPwd + userPo.getUserName()));
@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
             resultVo.setMsg("原始密码错误");
             return resultVo;
         }
-        userPo = new UserPo();
+        userPo = new UserPO();
         userPo.setId(userId);
         userPo.setUserName(userName);
         userPo.setPassword(DigestUtils.sha256Hex(newPwd + userName));
@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
         // 无法异步，文件上传时会先将文件临时存储在tomcat目录下，服务器响应后会马上删除该文件
         // taskExecutor.execute(() -> {
         // try {
-        UserPo userPo = RsaUtil.getUserByToken(token);
+        UserPO userPo = RsaUtil.getUserByToken(token);
         userPo.setPhotoUrl(fileUtil.uploadImg(userPhoto));
         userMapper.updatePhoto(userPo);
         // } catch (Exception e) {

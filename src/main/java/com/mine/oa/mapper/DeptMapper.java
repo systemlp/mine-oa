@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.mine.oa.dto.DeptDto;
 import com.mine.oa.dto.DeptQueryDto;
-import com.mine.oa.entity.DepartmentPo;
+import com.mine.oa.entity.DepartmentPO;
 import com.mine.oa.util.BaseMapper;
 
 /***
@@ -16,17 +16,17 @@ import com.mine.oa.util.BaseMapper;
  * @see [相关类/方法]（可选）
  * @since [产品/模块版本] （可选）
  */
-public interface DeptMapper extends BaseMapper<DepartmentPo> {
+public interface DeptMapper extends BaseMapper<DepartmentPO> {
 
     List<DeptDto> findByParam(DeptQueryDto param);
 
-    List<DepartmentPo> queryByParam(DepartmentPo param);
+    List<DepartmentPO> queryByParam(DepartmentPO param);
 
-    int getNameCount(DepartmentPo param);
+    int getNameCount(DepartmentPO param);
 
-    int merge(DepartmentPo param);
+    int merge(DepartmentPO param);
 
-    int updateState(DepartmentPo param);
+    int updateState(DepartmentPO param);
 
-    int insert(DepartmentPo param);
+    int insert(DepartmentPO param);
 }

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.mine.oa.dto.PositionDto;
-import com.mine.oa.entity.PositionPo;
+import com.mine.oa.entity.PositionPO;
 import com.mine.oa.service.PositionService;
 import com.mine.oa.vo.CommonResultVo;
 
@@ -30,7 +30,7 @@ public class PositionController {
     }
 
     @PostMapping("/merge")
-    public CommonResultVo merge(@RequestBody PositionPo param, @RequestHeader String token) {
+    public CommonResultVo merge(@RequestBody PositionPO param, @RequestHeader String token) {
         return positionService.merge(param, token);
     }
 

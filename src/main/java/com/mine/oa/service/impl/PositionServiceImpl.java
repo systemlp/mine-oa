@@ -13,9 +13,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mine.oa.constant.OaConstants;
 import com.mine.oa.dto.PositionDto;
-import com.mine.oa.entity.DepartmentPo;
-import com.mine.oa.entity.EmployeePo;
-import com.mine.oa.entity.PositionPo;
+import com.mine.oa.entity.EmployeePO;
+import com.mine.oa.entity.PositionPO;
 import com.mine.oa.exception.InParamException;
 import com.mine.oa.mapper.DeptMapper;
 import com.mine.oa.mapper.EmployeeMapper;
@@ -46,16 +45,16 @@ public class PositionServiceImpl implements PositionService {
     private EmployeeMapper employeeMapper;
 
     @Override
-    public CommonResultVo<PageInfo<PositionPo>> findByParam(PositionDto param) {
+    public CommonResultVo<PageInfo<PositionPO>> findByParam(PositionDto param) {
         PageHelper.startPage(param.getCurrent(), param.getPageSize());
-        List<PositionPo> deptList = positionMapper.findByParam(param);
-        PageInfo<PositionPo> page = new PageInfo<>(deptList);
-        return new CommonResultVo<PageInfo<PositionPo>>().success(page);
+        List<PositionPO> deptList = positionMapper.findByParam(param);
+        PageInfo<PositionPO> page = new PageInfo<>(deptList);
+        return new CommonResultVo<PageInfo<PositionPO>>().success(page);
     }
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public CommonResultVo merge(PositionPo param, String token) {
+    public CommonResultVo merge(PositionPO param, String token) {
         if (param == null || StringUtils.isAnyBlank(param.getName(), token)) {
             throw new InParamException("参数异常");
         }
@@ -77,13 +76,13 @@ public class PositionServiceImpl implements PositionService {
         if (id == null || StringUtils.isBlank(token)) {
             throw new InParamException("参数异常");
         }
-        EmployeePo employeePo = new EmployeePo();
+        EmployeePO employeePo = new EmployeePO();
         employeePo.setPositionId(id);
         employeePo.setState(OaConstants.NORMAL_STATE);
         if (!CollectionUtils.isEmpty(employeeMapper.findByParam(employeePo))) {
             return new CommonResultVo().warn("无法删除，该职位下存在员工！");
         }
-        PositionPo param = new PositionPo();
+        PositionPO param = new PositionPO();
         param.setId(id);
         param.setState(OaConstants.DELETE_STATE);
         param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
@@ -98,7 +97,7 @@ public class PositionServiceImpl implements PositionService {
         if (id == null || StringUtils.isBlank(token)) {
             throw new InParamException("参数异常");
         }
-        PositionPo param = new PositionPo();
+        PositionPO param = new PositionPO();
         param.setId(id);
         param.setState(OaConstants.NORMAL_STATE);
         param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
@@ -117,7 +116,7 @@ public class PositionServiceImpl implements PositionService {
         if (!CollectionUtils.isEmpty(positionMapper.findByParam(param))) {
             return new CommonResultVo().warn("已存在相同名称职位");
         }
-        PositionPo position = new PositionPo();
+        PositionPO position = new PositionPO();
         position.setName(param.getName());
         position.setCreateUserId(RsaUtil.getUserByToken(token).getId());
         if (positionMapper.insert(position) < 1) {

@@ -3,7 +3,6 @@ package com.mine.oa.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import com.mine.oa.service.DaoService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,16 +17,14 @@ import com.google.common.collect.Maps;
 import com.mine.oa.constant.OaConstants;
 import com.mine.oa.dto.DeptDto;
 import com.mine.oa.dto.DeptQueryDto;
-import com.mine.oa.entity.DepartmentPo;
-import com.mine.oa.entity.EmployeePo;
+import com.mine.oa.entity.DepartmentPO;
+import com.mine.oa.entity.EmployeePO;
 import com.mine.oa.exception.InParamException;
 import com.mine.oa.mapper.DeptMapper;
 import com.mine.oa.mapper.EmployeeMapper;
 import com.mine.oa.service.DeptService;
 import com.mine.oa.util.RsaUtil;
 import com.mine.oa.vo.CommonResultVo;
-import tk.mybatis.mapper.common.Mapper;
-import tk.mybatis.mapper.entity.Example;
 
 /***
  *
@@ -57,18 +54,18 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    public CommonResultVo<List<DepartmentPo>> findOptionalParnet(Integer id) {
+    public CommonResultVo<List<DepartmentPO>> findOptionalParnet(Integer id) {
         if (id == null) {
             throw new InParamException("参数异常");
         }
-        DepartmentPo param = new DepartmentPo();
+        DepartmentPO param = new DepartmentPO();
         param.setState(OaConstants.NORMAL_STATE);
         // Example example = new Example(DepartmentPo.class);
         // example.createCriteria().andEqualTo("state", OaConstants.NORMAL_STATE);
-        List<DepartmentPo> deptList = deptMapper.select(param);
+        List<DepartmentPO> deptList = deptMapper.select(param);
         param.setId(id);
-        Map<Integer, DepartmentPo> deptMap = Maps.newHashMap();
-        for (DepartmentPo departmentPo : deptList) {
+        Map<Integer, DepartmentPO> deptMap = Maps.newHashMap();
+        for (DepartmentPO departmentPo : deptList) {
             if (id.compareTo(departmentPo.getId()) != 0) {
                 deptMap.put(departmentPo.getId(), departmentPo);
             }
@@ -77,19 +74,19 @@ public class DeptServiceImpl implements DeptService {
         for (Integer notId : notIdList) {
             deptMap.remove(notId);
         }
-        return new CommonResultVo<List<DepartmentPo>>().success(Lists.newArrayList(deptMap.values()));
+        return new CommonResultVo<List<DepartmentPO>>().success(Lists.newArrayList(deptMap.values()));
     }
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public CommonResultVo update(DepartmentPo param, String token) {
+    public CommonResultVo update(DepartmentPO param, String token) {
         if (param == null || StringUtils.isAnyBlank(param.getName(), token)) {
             throw new InParamException("参数异常");
         }
         if (deptMapper.getNameCount(param) > 0) {
             return new CommonResultVo().warn("已存在相同名称部门");
         }
-        DepartmentPo parentDept = deptMapper.selectByPrimaryKey(param.getParentId());
+        DepartmentPO parentDept = deptMapper.selectByPrimaryKey(param.getParentId());
         if (parentDept == null) {
             throw new InParamException("参数异常");
         }
@@ -109,16 +106,16 @@ public class DeptServiceImpl implements DeptService {
         if (id == null || StringUtils.isBlank(token)) {
             throw new InParamException("参数异常");
         }
-        DepartmentPo param = new DepartmentPo();
+        DepartmentPO param = new DepartmentPO();
         param.setParentId(id);
         param.setState(OaConstants.NORMAL_STATE);
-        List<DepartmentPo> deptList = deptMapper.select(param);
+        List<DepartmentPO> deptList = deptMapper.select(param);
         param.setId(id);
         String msg = "";
         if (!CollectionUtils.isEmpty(deptList)) {
             msg = "无法删除，该部门下存在子部门";
         }
-        EmployeePo employeePo = new EmployeePo();
+        EmployeePO employeePo = new EmployeePO();
         employeePo.setDeptId(id);
         employeePo.setState(OaConstants.NORMAL_STATE);
         if (!CollectionUtils.isEmpty(employeeMapper.findByParam(employeePo))) {
@@ -144,7 +141,7 @@ public class DeptServiceImpl implements DeptService {
         if (id == null || StringUtils.isBlank(token)) {
             throw new InParamException("参数异常");
         }
-        DepartmentPo param = new DepartmentPo();
+        DepartmentPO param = new DepartmentPO();
         param.setId(id);
         param.setState(OaConstants.NORMAL_STATE);
         param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
@@ -155,27 +152,27 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    public CommonResultVo<List<DepartmentPo>> findOptional() {
-        DepartmentPo param = new DepartmentPo();
+    public CommonResultVo<List<DepartmentPO>> findOptional() {
+        DepartmentPO param = new DepartmentPO();
         param.setState(OaConstants.NORMAL_STATE);
-        List<DepartmentPo> deptList = deptMapper.select(param);
-        return new CommonResultVo<List<DepartmentPo>>().success(deptList);
+        List<DepartmentPO> deptList = deptMapper.select(param);
+        return new CommonResultVo<List<DepartmentPO>>().success(deptList);
     }
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public CommonResultVo insert(DepartmentPo param, String token) {
+    public CommonResultVo insert(DepartmentPO param, String token) {
         if (param == null || StringUtils.isAnyBlank(param.getName(), token)) {
             throw new InParamException("参数异常");
         }
-        DepartmentPo queryParam = new DepartmentPo();
+        DepartmentPO queryParam = new DepartmentPO();
         queryParam.setName(param.getName());
         if (deptMapper.getNameCount(queryParam) > 0) {
             return new CommonResultVo().warn("已存在相同名称部门");
         }
         queryParam.setName(null);
         queryParam.setId(param.getParentId());
-        List<DepartmentPo> parentDept = deptMapper.queryByParam(queryParam);
+        List<DepartmentPO> parentDept = deptMapper.queryByParam(queryParam);
         if (CollectionUtils.isEmpty(parentDept)) {
             throw new InParamException("参数异常");
         }
@@ -196,9 +193,9 @@ public class DeptServiceImpl implements DeptService {
      * @param deptList 部门
      * @return 不可选父级部门id
      */
-    private List<Integer> findNotOptionalParnetId(Integer id, List<DepartmentPo> deptList) {
+    private List<Integer> findNotOptionalParnetId(Integer id, List<DepartmentPO> deptList) {
         List<Integer> idList = Lists.newArrayList();
-        for (DepartmentPo departmentPo : deptList) {
+        for (DepartmentPO departmentPo : deptList) {
             if (departmentPo.getParentId() == null || id.compareTo(departmentPo.getParentId()) != 0) {
                 continue;
             }

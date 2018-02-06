@@ -5,7 +5,7 @@ import java.util.List;
 import com.github.pagehelper.PageInfo;
 import com.mine.oa.dto.DeptDto;
 import com.mine.oa.dto.DeptQueryDto;
-import com.mine.oa.entity.DepartmentPo;
+import com.mine.oa.entity.DepartmentPO;
 import com.mine.oa.vo.CommonResultVo;
 
 /***
@@ -21,16 +21,16 @@ public interface DeptService {
 
     CommonResultVo<PageInfo<DeptDto>> findPageByParam(DeptQueryDto param);
 
-    CommonResultVo<List<DepartmentPo>> findOptionalParnet(Integer id);
+    CommonResultVo<List<DepartmentPO>> findOptionalParnet(Integer id);
 
-    CommonResultVo update(DepartmentPo param, String token);
+    CommonResultVo update(DepartmentPO param, String token);
 
     CommonResultVo delete(Integer id, String token);
 
     CommonResultVo enable(Integer id, String token);
 
-    CommonResultVo<List<DepartmentPo>> findOptional();
+    CommonResultVo<List<DepartmentPO>> findOptional();
 
-    CommonResultVo insert(DepartmentPo param, String token);
+    CommonResultVo insert(DepartmentPO param, String token);
 
 }

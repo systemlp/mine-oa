@@ -3,7 +3,7 @@ package com.mine.oa.mapper;
 import java.util.List;
 
 import com.mine.oa.dto.PositionDto;
-import com.mine.oa.entity.PositionPo;
+import com.mine.oa.entity.PositionPO;
 import com.mine.oa.util.BaseMapper;
 
 /***
@@ -15,14 +15,14 @@ import com.mine.oa.util.BaseMapper;
  * @see [相关类/方法]（可选）
  * @since [产品/模块版本] （可选）
  */
-public interface PositionMapper extends BaseMapper<PositionPo> {
+public interface PositionMapper extends BaseMapper<PositionPO> {
 
-    List<PositionPo> findByParam(PositionDto param);
+    List<PositionPO> findByParam(PositionDto param);
 
-    int merge(PositionPo param);
+    int merge(PositionPO param);
 
-    int updateState(PositionPo param);
+    int updateState(PositionPO param);
 
-    int insert(PositionPo param);
+    int insert(PositionPO param);
 
 }
