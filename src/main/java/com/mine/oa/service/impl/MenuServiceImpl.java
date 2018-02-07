@@ -146,7 +146,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public CommonResultVo findAllForUpdateParent(Integer id) {
         List<MenuPO> menuList = findAllMenu();
-        Map<Integer, MenuPO> deptMap = Maps.newHashMap();
+        Map<Integer, MenuPO> deptMap = Maps.newLinkedHashMap();
         for (MenuPO menu : menuList) {
             if (id.compareTo(menu.getId()) != 0) {
                 deptMap.put(menu.getId(), menu);
@@ -221,12 +221,12 @@ public class MenuServiceImpl implements MenuService {
     private Set<Integer> findNotOptionalParnetId(Integer id, List<MenuPO> menuList) {
         Set<Integer> idSet = Sets.newHashSet();
         for (MenuPO menu : menuList) {
-            if (!Objects.equals(id, menu.getId())
-                    && (menu.getParentId() == null || !Objects.equals(id, menu.getParentId()))) {
-                continue;
+            if (Objects.equals(id, menu.getId()) || Objects.equals(id, menu.getParentId())) {
+                idSet.add(menu.getId());
             }
-            idSet.add(menu.getId());
-            idSet.addAll(findNotOptionalParnetId(menu.getId(), menuList));
+            if(Objects.equals(id, menu.getParentId())){
+                idSet.addAll(findNotOptionalParnetId(menu.getId(), menuList));
+            }
         }
         return idSet;
     }
