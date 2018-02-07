@@ -1,10 +1,9 @@
 package com.mine.oa.service.impl;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -13,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.mine.oa.constant.OaConstants;
 import com.mine.oa.entity.MenuPO;
 import com.mine.oa.exception.InParamException;
@@ -66,10 +66,11 @@ public class MenuServiceImpl implements MenuService {
             return new CommonResultVo().warn("该菜单下包含子菜单，无法删除");
         }
         menu = new MenuPO();
+        menu.setId(id);
         menu.setState(OaConstants.DELETE_STATE);
         menu.setUpdateTime(new Date());
         menu.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
-        if (menuMapper.updateByPrimaryKey(menu) < 1) {
+        if (menuMapper.updateByPrimaryKeySelective(menu) < 1) {
             throw new InParamException();
         }
         return new CommonResultVo().successMsg("删除成功");
@@ -81,9 +82,14 @@ public class MenuServiceImpl implements MenuService {
         if (result != null) {
             return result;
         }
-        menu.setUpdateTime(new Date());
-        menu.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
-        if (menuMapper.updateByPrimaryKey(menu) < 1) {
+        MenuPO updateMenu = new MenuPO();
+        BeanUtils.copyProperties(menu, updateMenu);
+        updateMenu.setUpdateTime(new Date());
+        updateMenu.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
+        updateMenu.setCreateTime(null);
+        updateMenu.setCreateUserId(null);
+        updateMenu.setState(null);
+        if (menuMapper.updateByPrimaryKeySelective(menu) < 1) {
             throw new InParamException();
         }
         return new CommonResultVo().successMsg("修改成功");
@@ -92,70 +98,45 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public CommonResultVo findTree() {
         List<MenuPO> menuList = findAllMenu();
-        return new CommonResultVo<List<TreeNodeVO>>().success(convertToTree(menuList));
+        return new CommonResultVo<List<TreeNodeVO>>().success(buildTree(menuList));
     }
 
-    private static List<TreeNodeVO> convertToTree(List<MenuPO> menuList) {
+    private List<TreeNodeVO> buildTree(List<MenuPO> menuList) {
         if (CollectionUtils.isEmpty(menuList)) {
             return Lists.newArrayList();
         }
-        List<TreeNodeVO> tree = Lists.newArrayList();
-        for (MenuPO menu : menuList) {
-            if (menu.getParentId() == null) {
-                initTree(menu, menuList, tree);
+        List<TreeNodeVO> treeNodes = convertToTreeNode(menuList);
+        List<TreeNodeVO> rootList = Lists.newArrayList();
+        for (TreeNodeVO treeNode : treeNodes) {
+            if (treeNode.getParentId() == null) {
+                rootList.add(treeNode);
             }
+            for (TreeNodeVO node : treeNodes) {
+                if (Objects.equals(node.getParentId(), treeNode.getId())) {
+                    if (treeNode.getChildren() == null) {
+                        treeNode.setChildren(Lists.newArrayList());
+                    }
+                    treeNode.getChildren().add(node);
+                }
+            }
+        }
+        return rootList;
+    }
+
+    private List<TreeNodeVO> convertToTreeNode(List<MenuPO> menuList) {
+        List<TreeNodeVO> tree = Lists.newArrayList();
+        TreeNodeVO node;
+        for (MenuPO menu : menuList) {
+            node = new TreeNodeVO();
+            node.setId(menu.getId());
+            node.setParentId(menu.getParentId());
+            node.setTitle(menu.getTitle());
+            node.setUrl(menu.getUrl());
+            node.setIcon(menu.getIcon());
+            tree.add(node);
         }
         return tree;
     }
-
-    private static void initTree(MenuPO menu, List<MenuPO> menuList, List<TreeNodeVO> nodeList) {
-        TreeNodeVO root = new TreeNodeVO();
-        root.setTitle(menu.getTitle());
-        root.setUrl(menu.getUrl());
-        root.setIcon(menu.getIcon());
-        nodeList.add(root);
-        setChildren(root, menu.getId(), menuList);
-    }
-
-    private static void setChildren(TreeNodeVO root, Integer rootId, List<MenuPO> menuList) {
-        List<TreeNodeVO> children = Lists.newArrayList();
-        for (MenuPO node : menuList) {
-            if (rootId.equals(node.getParentId())) {
-                initTree(node, menuList, children);
-            }
-        }
-        if (CollectionUtils.isEmpty(children)) {
-            return;
-        }
-        root.setChildren(children);
-    }
-
-    // public static void main(String[] args) {
-    // List<MenuPO> menuList = Lists.newArrayList();
-    // MenuPO menu1 = new MenuPO();
-    // menu1.setId(1);
-    // MenuPO menu2 = new MenuPO();
-    // menu2.setId(2);
-    // menu2.setParentId(1);
-    // MenuPO menu3 = new MenuPO();
-    // menu3.setId(3);
-    // menu3.setParentId(1);
-    // MenuPO menu4 = new MenuPO();
-    // menu4.setId(4);
-    // MenuPO menu5 = new MenuPO();
-    // menu5.setId(5);
-    // menu5.setParentId(4);
-    // MenuPO menu6 = new MenuPO();
-    // menu6.setId(6);
-    // menu6.setParentId(4);
-    // menuList.add(menu1);
-    // menuList.add(menu2);
-    // menuList.add(menu3);
-    // menuList.add(menu4);
-    // menuList.add(menu5);
-    // menuList.add(menu6);
-    // System.out.println(JSON.toJSONString(convertToTree(menuList)));
-    // }
 
     @Override
     public CommonResultVo findAll() {
@@ -171,27 +152,30 @@ public class MenuServiceImpl implements MenuService {
                 deptMap.put(menu.getId(), menu);
             }
         }
-        List<Integer> notIdList = findNotOptionalParnetId(id, menuList);
-        for (Integer notId : notIdList) {
+        Set<Integer> notIdSet = findNotOptionalParnetId(id, menuList);
+        for (Integer notId : notIdSet) {
             deptMap.remove(notId);
         }
         return new CommonResultVo<List<MenuPO>>().success(Lists.newArrayList(deptMap.values()));
     }
 
+    /***
+     * 参数校验
+     * 
+     * @param menu 菜单
+     * @param token 密钥
+     * @return 校验结果
+     */
     private CommonResultVo checkMenu(MenuPO menu, String token) {
         if (menu == null || StringUtils.isAnyBlank(menu.getTitle(), menu.getUrl(), token) || menu.getSort() == null) {
             throw new InParamException();
         }
         MenuPO menuQuery = new MenuPO();
+        menuQuery.setId(menu.getId());
         menuQuery.setTitle(menu.getTitle());
         menuQuery.setUrl(menu.getUrl());
-        menuQuery.setState(OaConstants.DELETE_STATE);
-        MenuPO oldMenu;
-        if (menu.getId() == null) {
-            oldMenu = menuMapper.selectOne(menuQuery);
-        } else {
-            oldMenu = menuMapper.updateCheckExists(menuQuery);
-        }
+        menuQuery.setState(OaConstants.NORMAL_STATE);
+        MenuPO oldMenu = menuMapper.checkExists(menuQuery);
         if (oldMenu != null) {
             String warnMsg = null;
             if (StringUtils.equals(oldMenu.getTitle(), menu.getTitle())) {
@@ -234,15 +218,16 @@ public class MenuServiceImpl implements MenuService {
      * @param menuList 菜单
      * @return 不可选父级菜单id
      */
-    private List<Integer> findNotOptionalParnetId(Integer id, List<MenuPO> menuList) {
-        List<Integer> idList = Lists.newArrayList();
+    private Set<Integer> findNotOptionalParnetId(Integer id, List<MenuPO> menuList) {
+        Set<Integer> idSet = Sets.newHashSet();
         for (MenuPO menu : menuList) {
-            if (menu.getParentId() == null || id.compareTo(menu.getParentId()) != 0) {
+            if (!Objects.equals(id, menu.getId())
+                    && (menu.getParentId() == null || !Objects.equals(id, menu.getParentId()))) {
                 continue;
             }
-            idList.add(menu.getId());
-            idList.addAll(findNotOptionalParnetId(menu.getId(), menuList));
+            idSet.add(menu.getId());
+            idSet.addAll(findNotOptionalParnetId(menu.getId(), menuList));
         }
-        return idList;
+        return idSet;
     }
 }

@@ -1,10 +1,11 @@
 package com.mine.oa.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.mine.oa.entity.MenuPO;
 import com.mine.oa.service.MenuService;
 import com.mine.oa.vo.CommonResultVo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 /***
  *
@@ -45,6 +46,11 @@ public class MenuController {
     @GetMapping("/findAll")
     public CommonResultVo findAll() {
         return menuService.findAll();
+    }
+
+    @GetMapping("/{id}/findOptionalParent")
+    public CommonResultVo findAll(@PathVariable Integer id) {
+        return menuService.findAllForUpdateParent(id);
     }
 
 }

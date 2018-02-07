@@ -2,13 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.mine.oa.mapper.MenuMapper">
 
-    <select id="updateCheckExists" resultType="MenuPO">
-        SELECT *
-        FROM t_menu t
-        WHERE t.id != #{id}
-              AND t.title = #{title}
-              AND t.url = #{url}
-              AND t.state = #{state}
+    <select id="checkExists" resultType="MenuPO">
+        SELECT
+        *
+        FROM
+        t_menu t
+        WHERE
+          t.state = #{state}
+        AND (
+            t.title = #{title}
+            OR t.url = #{url}
+        )
+        <if test="id!=null">
+        AND t.id != #{id}
+        </if>
+        LIMIT 1
     </select>
 
     <select id="findAll" resultType="MenuPO">

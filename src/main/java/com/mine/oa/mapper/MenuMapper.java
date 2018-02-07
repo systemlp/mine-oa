@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface MenuMapper extends BaseMapper<MenuPO> {
 
-    MenuPO updateCheckExists(MenuPO menuQuery);
+    MenuPO checkExists(MenuPO menuQuery);
 
     List<MenuPO> findAll(Integer state);
 }

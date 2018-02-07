@@ -14,10 +14,10 @@ import org.apache.commons.lang3.StringUtils;
 public class InParamException extends RuntimeException {
 
     public InParamException() {
-        super();
+        super("参数异常");
     }
 
     public InParamException(String message) {
-        super(StringUtils.isBlank(message) ? "参数异常" : message);
+        super(message);
     }
 }

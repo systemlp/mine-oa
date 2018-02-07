@@ -13,10 +13,28 @@ import java.util.List;
  */
 public class TreeNodeVO {
 
+    private Integer id;
+    private Integer parentId;
     private String url;
     private String title;
     private String icon;
     private List<TreeNodeVO> children;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
 
     public String getUrl() {
         return url;
