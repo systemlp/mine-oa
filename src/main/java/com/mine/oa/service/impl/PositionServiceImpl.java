@@ -56,7 +56,7 @@ public class PositionServiceImpl implements PositionService {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public CommonResultVo merge(PositionPO param, String token) {
         if (param == null || StringUtils.isAnyBlank(param.getName(), token)) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         PositionDto positionDto = new PositionDto();
         positionDto.setName(param.getName());
@@ -65,7 +65,7 @@ public class PositionServiceImpl implements PositionService {
         }
         param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
         if (positionMapper.merge(param) < 1) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         return new CommonResultVo().successMsg("修改成功");
     }
@@ -74,7 +74,7 @@ public class PositionServiceImpl implements PositionService {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public CommonResultVo delete(Integer id, String token) {
         if (id == null || StringUtils.isBlank(token)) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         EmployeePO employeePo = new EmployeePO();
         employeePo.setPositionId(id);
@@ -87,7 +87,7 @@ public class PositionServiceImpl implements PositionService {
         param.setState(OaConstants.DELETE_STATE);
         param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
         if (positionMapper.updateState(param) < 1) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         return new CommonResultVo().successMsg("删除成功");
     }
@@ -95,14 +95,14 @@ public class PositionServiceImpl implements PositionService {
     @Override
     public CommonResultVo enable(Integer id, String token) {
         if (id == null || StringUtils.isBlank(token)) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         PositionPO param = new PositionPO();
         param.setId(id);
         param.setState(OaConstants.NORMAL_STATE);
         param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
         if (positionMapper.updateState(param) < 1) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         return new CommonResultVo().successMsg("启用成功");
     }
@@ -111,7 +111,7 @@ public class PositionServiceImpl implements PositionService {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public CommonResultVo insert(PositionDto param, String token) {
         if (param == null || StringUtils.isAnyBlank(param.getName(), token)) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         if (!CollectionUtils.isEmpty(positionMapper.findByParam(param))) {
             return new CommonResultVo().warn("已存在相同名称职位");
@@ -120,7 +120,7 @@ public class PositionServiceImpl implements PositionService {
         position.setName(param.getName());
         position.setCreateUserId(RsaUtil.getUserByToken(token).getId());
         if (positionMapper.insert(position) < 1) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         return new CommonResultVo().successMsg("新增成功");
     }

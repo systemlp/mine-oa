@@ -70,7 +70,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             return checkResult;
         }
         if (param.getId() == null) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         UserPO loginUser = RsaUtil.getUserByToken(token);
         Date now = new Date();
@@ -84,8 +84,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setUpdateTime(now);
         BeanUtils.copyProperties(param, employee);
         if (userMapper.updateByPrimaryKeySelective(userPo) < 1
-                && employeeMapper.updateByPrimaryKeySelective(employee) < 1) {
-            throw new InParamException("参数异常");
+                || employeeMapper.updateByPrimaryKeySelective(employee) < 1) {
+            throw new InParamException();
         }
         return new CommonResultVo().successMsg("修改成功");
     }
@@ -105,7 +105,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         UserPO loginUser = RsaUtil.getUserByToken(token);
         UserPO userPo = this.initUser(param, loginUser);
         if (userMapper.insertSelective(userPo) < 1) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         EmployeePO employee = new EmployeePO();
         BeanUtils.copyProperties(param, employee);
@@ -114,7 +114,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employeeMapper.insertSelective(employee) > 0) {
             return new CommonResultVo().successMsg("新增成功");
         }
-        throw new InParamException("参数异常");
+        throw new InParamException();
     }
 
     @Override
@@ -137,7 +137,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                         param.getMobile(), token)
                 || !ObjectUtils.allNotNull(param.getSex(), param.getCardType(), param.getEntryDate(), param.getDeptId(),
                         param.getPositionId())) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         DepartmentPO dept = deptMapper.selectByPrimaryKey(param.getDeptId());
         if (dept == null) {
@@ -168,7 +168,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private void changeState(Integer id, String token, int state) {
         if (id == null || id < 1 || StringUtils.isBlank(token)) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         EmployeePO emp = employeeMapper.selectByPrimaryKey(id);
         if (emp == null) {
@@ -192,7 +192,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         leaveUser.setState(state);
         if (userMapper.updateByPrimaryKeySelective(leaveUser) < 1
                 || employeeMapper.updateByPrimaryKeySelective(leaveEmp) < 1) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
     }
 

@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public CommonResultVo updatePwd(String token, String oldPwd, String newPwd) {
         if (StringUtils.isAnyBlank(token, oldPwd, newPwd)) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         UserPO userPo = RsaUtil.getUserByToken(token);
         Integer userId = userPo.getId();
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
         userPo.setUserName(userName);
         userPo.setPassword(DigestUtils.sha256Hex(newPwd + userName));
         if (userMapper.updatePwd(userPo) < 1) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         return resultVo.successMsg("密码修改成功，请重新登录。");
     }
@@ -108,11 +108,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public CommonResultVo<UserDataDto> findDataByUserName(String userName) {
         if (StringUtils.isBlank(userName)) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         UserDataDto dataDto = userMapper.findDataByUserName(RsaUtil.getUserByToken(userName).getUserName());
         if (dataDto == null) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         if (StringUtils.isNotBlank(dataDto.getPhotoUrl())) {
             dataDto.setPhotoUrl(FileUtil.getImgBase64(dataDto.getPhotoUrl()));

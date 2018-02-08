@@ -56,7 +56,7 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public CommonResultVo<List<DepartmentPO>> findOptionalParnet(Integer id) {
         if (id == null) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         DepartmentPO param = new DepartmentPO();
         param.setState(OaConstants.NORMAL_STATE);
@@ -81,14 +81,14 @@ public class DeptServiceImpl implements DeptService {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public CommonResultVo update(DepartmentPO param, String token) {
         if (param == null || StringUtils.isAnyBlank(param.getName(), token)) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         if (deptMapper.getNameCount(param) > 0) {
             return new CommonResultVo().warn("已存在相同名称部门");
         }
         DepartmentPO parentDept = deptMapper.selectByPrimaryKey(param.getParentId());
         if (parentDept == null) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         if (parentDept.getState() == OaConstants.DELETE_STATE) {
             return new CommonResultVo().warn("啊哦，在您操作期间父级部门被删除了，请重新选择吧-_-");
@@ -104,7 +104,7 @@ public class DeptServiceImpl implements DeptService {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public CommonResultVo delete(Integer id, String token) {
         if (id == null || StringUtils.isBlank(token)) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         DepartmentPO param = new DepartmentPO();
         param.setParentId(id);
@@ -131,7 +131,7 @@ public class DeptServiceImpl implements DeptService {
         param.setState(OaConstants.DELETE_STATE);
         param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
         if (deptMapper.updateState(param) < 1) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         return new CommonResultVo().successMsg("删除成功");
     }
@@ -139,14 +139,14 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public CommonResultVo enable(Integer id, String token) {
         if (id == null || StringUtils.isBlank(token)) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         DepartmentPO param = new DepartmentPO();
         param.setId(id);
         param.setState(OaConstants.NORMAL_STATE);
         param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
         if (deptMapper.updateState(param) < 1) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         return new CommonResultVo().successMsg("启用成功");
     }
@@ -163,7 +163,7 @@ public class DeptServiceImpl implements DeptService {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public CommonResultVo insert(DepartmentPO param, String token) {
         if (param == null || StringUtils.isAnyBlank(param.getName(), token)) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         DepartmentPO queryParam = new DepartmentPO();
         queryParam.setName(param.getName());
@@ -174,14 +174,14 @@ public class DeptServiceImpl implements DeptService {
         queryParam.setId(param.getParentId());
         List<DepartmentPO> parentDept = deptMapper.queryByParam(queryParam);
         if (CollectionUtils.isEmpty(parentDept)) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         if (parentDept.get(0).getState() == OaConstants.DELETE_STATE) {
             return new CommonResultVo().warn("啊哦，在您操作期间父级部门被删除了，请重新选择吧-_-");
         }
         param.setCreateUserId(RsaUtil.getUserByToken(token).getId());
         if (deptMapper.insert(param) < 1) {
-            throw new InParamException("参数异常");
+            throw new InParamException();
         }
         return new CommonResultVo().successMsg("新增成功");
     }
