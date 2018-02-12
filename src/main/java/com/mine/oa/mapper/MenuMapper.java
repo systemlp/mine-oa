@@ -19,4 +19,8 @@ public interface MenuMapper extends BaseMapper<MenuPO> {
     MenuPO checkExists(MenuPO menuQuery);
 
     List<MenuPO> findAll(Integer state);
+
+    List<MenuPO> findByRole(Integer roleId);
+
+    int deleteRoleMenu(Integer roleId);
 }

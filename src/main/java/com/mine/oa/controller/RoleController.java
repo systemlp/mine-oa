@@ -7,6 +7,8 @@ import com.mine.oa.vo.CommonResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 /***
  *
  * 〈一句话功能简述〉<br>
@@ -46,6 +48,17 @@ public class RoleController {
     @PostMapping("/findPageByParam")
     public CommonResultVo findPageByParam(@RequestBody RoleQueryDTO roleQuery) {
         return roleService.findPageByParam(roleQuery);
+    }
+
+    @GetMapping("/{id}/findMenu")
+    public CommonResultVo findMenu(@PathVariable Integer id) {
+        return roleService.findMenu(id);
+    }
+
+    @PostMapping("/{id}/menuAuthorize")
+    public CommonResultVo menuAuthorize(@PathVariable Integer id, @RequestBody Set<Integer> menuIdSet,
+            @RequestHeader String token) {
+        return roleService.menuAuthorize(id, menuIdSet, token);
     }
 
 }

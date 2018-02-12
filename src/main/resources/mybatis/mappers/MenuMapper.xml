@@ -28,5 +28,15 @@
         ORDER BY parent_id,sort
     </select>
 
+    <select id="findByRole" resultType="MenuPO">
+        SELECT *
+        FROM t_menu t
+        INNER JOIN t_role_menu t1 ON  t.id=t1.menu_id AND t1.role_id=#{roleId} AND t.state=1
+    </select>
+
+    <delete id="deleteRoleMenu">
+        DELETE FROM t_role_menu WHERE role_id=#{roleId}
+    </delete>
+
 
 </mapper>

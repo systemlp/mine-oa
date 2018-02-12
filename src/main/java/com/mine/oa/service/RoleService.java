@@ -4,6 +4,8 @@ import com.mine.oa.dto.RoleQueryDTO;
 import com.mine.oa.entity.RolePO;
 import com.mine.oa.vo.CommonResultVo;
 
+import java.util.Set;
+
 /***
  *
  * 〈一句话功能简述〉<br>
@@ -25,4 +27,7 @@ public interface RoleService {
 
     CommonResultVo findPageByParam(RoleQueryDTO roleQuery);
 
+    CommonResultVo findMenu(Integer id);
+
+    CommonResultVo menuAuthorize(Integer id, Set<Integer> menuIdSet,String token);
 }
