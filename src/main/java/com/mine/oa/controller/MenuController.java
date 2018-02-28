@@ -53,4 +53,9 @@ public class MenuController {
         return menuService.findAllForUpdateParent(id);
     }
 
+    @GetMapping("/findByToken")
+    public CommonResultVo findByToken(@RequestHeader String token) {
+        return menuService.findByToken(token);
+    }
+
 }

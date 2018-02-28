@@ -33,10 +33,18 @@
         FROM t_menu t
         INNER JOIN t_role_menu t1 ON  t.id=t1.menu_id AND t1.role_id=#{roleId} AND t.state=1
     </select>
-
-    <delete id="deleteRoleMenu">
-        DELETE FROM t_role_menu WHERE role_id=#{roleId}
-    </delete>
+    
+    <select id="findByUserId" resultType="MenuPO">
+        SELECT
+            t.*
+        FROM
+            t_menu t
+            INNER JOIN t_role_menu t1 ON t.id = t1.menu_id
+            INNER JOIN t_user_role t2 ON t1.role_id = t2.role_id
+        WHERE t.state=1
+            AND t2.user_id = #{userId}
+        ORDER BY t.parent_id,t.sort
+    </select>
 
 
 </mapper>

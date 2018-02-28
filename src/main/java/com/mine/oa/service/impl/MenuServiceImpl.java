@@ -159,6 +159,15 @@ public class MenuServiceImpl implements MenuService {
         return new CommonResultVo<List<MenuPO>>().success(Lists.newArrayList(deptMap.values()));
     }
 
+    @Override
+    public CommonResultVo findByToken(String token) {
+        if (StringUtils.isBlank(token)) {
+            throw new InParamException();
+        }
+        List<MenuPO> menuList = menuMapper.findByUserId(RsaUtil.getUserByToken(token).getId());
+        return new CommonResultVo<List<TreeNodeVO>>().success(buildTree(menuList));
+    }
+
     /***
      * 参数校验
      * 
@@ -224,7 +233,7 @@ public class MenuServiceImpl implements MenuService {
             if (Objects.equals(id, menu.getId()) || Objects.equals(id, menu.getParentId())) {
                 idSet.add(menu.getId());
             }
-            if(Objects.equals(id, menu.getParentId())){
+            if (Objects.equals(id, menu.getParentId())) {
                 idSet.addAll(findNotOptionalParnetId(menu.getId(), menuList));
             }
         }

@@ -1,7 +1,8 @@
 package com.mine.oa.mapper;
 
-import com.mine.oa.entity.MenuPO;
+import com.mine.oa.entity.UserRolePO;
 import com.mine.oa.util.BaseMapper;
+import com.mine.oa.vo.UserRoleVO;
 
 import java.util.List;
 
@@ -14,13 +15,8 @@ import java.util.List;
  * @see [相关类/方法]（可选）
  * @since [产品/模块版本] （可选）
  */
-public interface MenuMapper extends BaseMapper<MenuPO> {
+public interface UserRoleMapper extends BaseMapper<UserRolePO> {
 
-    MenuPO checkExists(MenuPO menuQuery);
+    List<UserRoleVO> findByUserId(Integer userId);
 
-    List<MenuPO> findAll(Integer state);
-
-    List<MenuPO> findByRole(Integer roleId);
-
-    List<MenuPO> findByUserId(Integer userId);
 }

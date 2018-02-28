@@ -26,4 +26,6 @@ public interface MenuService {
 
     CommonResultVo findAllForUpdateParent(Integer id);
 
+    CommonResultVo findByToken(String token);
+
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mine.oa.mapper.UserRoleMapper">
+
+    <select id="findByUserId" resultType="UserRoleVO">
+        SELECT
+            t1.id  userRoleId,
+            t.id   role_id,
+            t.name roleName
+        FROM
+            t_role t
+        LEFT JOIN t_user_role t1 ON t1.role_id = t.id AND t1.user_id = #{userId}
+        WHERE
+            t.state = 1
+        ORDER BY t1.id DESC
+    </select>
+
+</mapper>
