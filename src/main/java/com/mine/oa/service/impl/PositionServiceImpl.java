@@ -12,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mine.oa.constant.OaConstants;
+import com.mine.oa.dto.LoginInfoDTO;
 import com.mine.oa.dto.PositionDto;
 import com.mine.oa.entity.EmployeePO;
 import com.mine.oa.entity.PositionPO;
@@ -20,7 +21,6 @@ import com.mine.oa.mapper.DeptMapper;
 import com.mine.oa.mapper.EmployeeMapper;
 import com.mine.oa.mapper.PositionMapper;
 import com.mine.oa.service.PositionService;
-import com.mine.oa.util.RsaUtil;
 import com.mine.oa.vo.CommonResultVo;
 
 /***
@@ -54,8 +54,8 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public CommonResultVo merge(PositionPO param, String token) {
-        if (param == null || StringUtils.isAnyBlank(param.getName(), token)) {
+    public CommonResultVo merge(PositionPO param) {
+        if (param == null || StringUtils.isAnyBlank(param.getName())) {
             throw new InParamException();
         }
         PositionDto positionDto = new PositionDto();
@@ -63,7 +63,7 @@ public class PositionServiceImpl implements PositionService {
         if (!CollectionUtils.isEmpty(positionMapper.findByParam(positionDto))) {
             return new CommonResultVo().warn("已存在相同名称职位");
         }
-        param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
+        param.setUpdateUserId(LoginInfoDTO.get().getId());
         if (positionMapper.merge(param) < 1) {
             throw new InParamException();
         }
@@ -72,8 +72,8 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public CommonResultVo delete(Integer id, String token) {
-        if (id == null || StringUtils.isBlank(token)) {
+    public CommonResultVo delete(Integer id) {
+        if (id == null) {
             throw new InParamException();
         }
         EmployeePO employeePo = new EmployeePO();
@@ -85,7 +85,7 @@ public class PositionServiceImpl implements PositionService {
         PositionPO param = new PositionPO();
         param.setId(id);
         param.setState(OaConstants.DELETE_STATE);
-        param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
+        param.setUpdateUserId(LoginInfoDTO.get().getId());
         if (positionMapper.updateState(param) < 1) {
             throw new InParamException();
         }
@@ -93,14 +93,14 @@ public class PositionServiceImpl implements PositionService {
     }
 
     @Override
-    public CommonResultVo enable(Integer id, String token) {
-        if (id == null || StringUtils.isBlank(token)) {
+    public CommonResultVo enable(Integer id) {
+        if (id == null) {
             throw new InParamException();
         }
         PositionPO param = new PositionPO();
         param.setId(id);
         param.setState(OaConstants.NORMAL_STATE);
-        param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
+        param.setUpdateUserId(LoginInfoDTO.get().getId());
         if (positionMapper.updateState(param) < 1) {
             throw new InParamException();
         }
@@ -109,8 +109,8 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public CommonResultVo insert(PositionDto param, String token) {
-        if (param == null || StringUtils.isAnyBlank(param.getName(), token)) {
+    public CommonResultVo insert(PositionDto param) {
+        if (param == null || StringUtils.isAnyBlank(param.getName())) {
             throw new InParamException();
         }
         if (!CollectionUtils.isEmpty(positionMapper.findByParam(param))) {
@@ -118,7 +118,7 @@ public class PositionServiceImpl implements PositionService {
         }
         PositionPO position = new PositionPO();
         position.setName(param.getName());
-        position.setCreateUserId(RsaUtil.getUserByToken(token).getId());
+        position.setCreateUserId(LoginInfoDTO.get().getId());
         if (positionMapper.insert(position) < 1) {
             throw new InParamException();
         }

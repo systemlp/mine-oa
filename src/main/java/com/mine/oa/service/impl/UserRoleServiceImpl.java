@@ -1,25 +1,23 @@
 package com.mine.oa.service.impl;
 
-import com.mine.oa.entity.UserRolePO;
-import com.mine.oa.util.RsaUtil;
-import org.apache.commons.lang3.StringUtils;
+import java.util.Date;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.mine.oa.dto.PageQueryDto;
-import com.mine.oa.exception.InParamException;
-import com.mine.oa.mapper.UserRoleMapper;
-import com.mine.oa.service.UserRoleService;
-import com.mine.oa.vo.CommonResultVo;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
-import java.util.Set;
-import java.util.concurrent.BrokenBarrierException;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.mine.oa.dto.LoginInfoDTO;
+import com.mine.oa.dto.PageQueryDto;
+import com.mine.oa.entity.UserRolePO;
+import com.mine.oa.exception.InParamException;
+import com.mine.oa.mapper.UserRoleMapper;
+import com.mine.oa.service.UserRoleService;
+import com.mine.oa.vo.CommonResultVo;
 
 /***
  *
@@ -47,8 +45,8 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public CommonResultVo roleManage(Integer userId, Set<Integer> roleIds, String token) {
-        if (userId == null || StringUtils.isBlank(token)) {
+    public CommonResultVo roleManage(Integer userId, Set<Integer> roleIds) {
+        if (userId == null) {
             throw new InParamException();
         }
         UserRolePO record = new UserRolePO();
@@ -56,7 +54,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         userRoleMapper.delete(record);
         if (!CollectionUtils.isEmpty(roleIds)) {
             Date now = new Date();
-            Integer loginUserId = RsaUtil.getUserByToken(token).getId();
+            Integer loginUserId = LoginInfoDTO.get().getId();
             for (Integer roleId : roleIds) {
                 record = new UserRolePO();
                 record.setUserId(userId);

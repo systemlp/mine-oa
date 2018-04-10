@@ -1,12 +1,13 @@
 package com.mine.oa.controller;
 
-import com.mine.oa.dto.PageQueryDto;
-import com.mine.oa.service.UserRoleService;
-import com.mine.oa.vo.CommonResultVo;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import com.mine.oa.dto.PageQueryDto;
+import com.mine.oa.service.UserRoleService;
+import com.mine.oa.vo.CommonResultVo;
 
 /***
  *
@@ -30,8 +31,8 @@ public class UserRoleController {
     }
 
     @PostMapping("/{userId}/roleManage")
-    public CommonResultVo roleManage(@PathVariable Integer userId, @RequestBody Set<Integer> roleIds, @RequestHeader String token) {
-        return userRoleService.roleManage(userId, roleIds, token);
+    public CommonResultVo roleManage(@PathVariable Integer userId, @RequestBody Set<Integer> roleIds) {
+        return userRoleService.roleManage(userId, roleIds);
     }
 
 }

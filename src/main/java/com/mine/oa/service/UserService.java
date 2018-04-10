@@ -21,12 +21,12 @@ public interface UserService {
 
     CommonResultVo<Map> login(UserLoginDto loginDto);
 
-    CommonResultVo<UserPO> getByToken(String token);
+    CommonResultVo<UserPO> getByToken();
 
-    CommonResultVo updatePwd(String token, String oldPwd, String newPwd);
+    CommonResultVo updatePwd(String oldPwd, String newPwd);
 
-    CommonResultVo<UserDataDto> findDataByUserName(String userName);
+    CommonResultVo<UserDataDto> findDataByUserName();
 
-    void uploadUserPhoto(String token, MultipartFile userPhoto);
+    void uploadUserPhoto(MultipartFile userPhoto);
 
 }

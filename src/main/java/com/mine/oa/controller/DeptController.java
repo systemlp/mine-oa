@@ -40,23 +40,23 @@ public class DeptController {
     }
 
     @PostMapping("/merge")
-    public CommonResultVo merge(@RequestBody DepartmentPO param, @RequestHeader String token) {
-        return deptService.update(param, token);
+    public CommonResultVo merge(@RequestBody DepartmentPO param) {
+        return deptService.update(param);
     }
 
     @GetMapping("/delete/{id}")
-    public CommonResultVo delete(@PathVariable Integer id, @RequestHeader String token) {
-        return deptService.delete(id, token);
+    public CommonResultVo delete(@PathVariable Integer id) {
+        return deptService.delete(id);
     }
 
     @GetMapping("/enable/{id}")
-    public CommonResultVo enable(@PathVariable Integer id, @RequestHeader String token) {
-        return deptService.enable(id, token);
+    public CommonResultVo enable(@PathVariable Integer id) {
+        return deptService.enable(id);
     }
 
     @PostMapping("/insert")
-    public CommonResultVo insert(@RequestBody DepartmentPO param, @RequestHeader String token) {
-        return deptService.insert(param, token);
+    public CommonResultVo insert(@RequestBody DepartmentPO param) {
+        return deptService.insert(param);
     }
 
 }

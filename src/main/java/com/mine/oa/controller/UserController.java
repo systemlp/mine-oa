@@ -33,25 +33,25 @@ public class UserController {
     }
 
     @GetMapping(value = "/getUserByToken")
-    public CommonResultVo getUserByToken(@RequestHeader String token) {
-        return userService.getByToken(token);
+    public CommonResultVo getUserByToken() {
+        return userService.getByToken();
     }
 
     @PostMapping(value = "/updatePwd")
-    public CommonResultVo updatePwd(@RequestBody Map<String, String> paramMap, @RequestHeader String token) {
+    public CommonResultVo updatePwd(@RequestBody Map<String, String> paramMap) {
         String oldPwd = paramMap.get("oldPwd");
         String newPwd = paramMap.get("newPwd");
-        return userService.updatePwd(token, oldPwd, newPwd);
+        return userService.updatePwd(oldPwd, newPwd);
     }
 
     @GetMapping(value = "/findDataByUserName")
-    public CommonResultVo findDataByUserName(@RequestHeader String token) throws Exception {
-        return userService.findDataByUserName(token);
+    public CommonResultVo findDataByUserName() throws Exception {
+        return userService.findDataByUserName();
     }
 
     @PostMapping(value = "/uploadUserPhoto")
-    public byte[] uploadUserPhoto(String token, MultipartFile userPhoto) throws IOException {
-        userService.uploadUserPhoto(token, userPhoto);
+    public byte[] uploadUserPhoto(MultipartFile userPhoto) throws IOException {
+        userService.uploadUserPhoto(userPhoto);
         return userPhoto.getBytes();
     }
 

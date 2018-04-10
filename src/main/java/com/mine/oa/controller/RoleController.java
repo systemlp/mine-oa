@@ -26,23 +26,23 @@ public class RoleController {
     private RoleService roleService;
 
     @PostMapping("/insert")
-    public CommonResultVo insert(@RequestBody RolePO role, @RequestHeader String token) {
-        return roleService.insert(role, token);
+    public CommonResultVo insert(@RequestBody RolePO role) {
+        return roleService.insert(role);
     }
 
     @GetMapping("/{id}/delete")
-    public CommonResultVo delete(@PathVariable Integer id, @RequestHeader String token) {
-        return roleService.delete(id, token);
+    public CommonResultVo delete(@PathVariable Integer id) {
+        return roleService.delete(id);
     }
 
     @GetMapping("/{id}/enable")
-    public CommonResultVo enable(@PathVariable Integer id, @RequestHeader String token) {
-        return roleService.enable(id, token);
+    public CommonResultVo enable(@PathVariable Integer id) {
+        return roleService.enable(id);
     }
 
     @PostMapping("/update")
-    public CommonResultVo update(@RequestBody RolePO role, @RequestHeader String token) {
-        return roleService.update(role, token);
+    public CommonResultVo update(@RequestBody RolePO role) {
+        return roleService.update(role);
     }
 
     @PostMapping("/findPageByParam")
@@ -56,9 +56,8 @@ public class RoleController {
     }
 
     @PostMapping("/{id}/menuAuthorize")
-    public CommonResultVo menuAuthorize(@PathVariable Integer id, @RequestBody Set<Integer> menuIdSet,
-            @RequestHeader String token) {
-        return roleService.menuAuthorize(id, menuIdSet, token);
+    public CommonResultVo menuAuthorize(@PathVariable Integer id, @RequestBody Set<Integer> menuIdSet) {
+        return roleService.menuAuthorize(id, menuIdSet);
     }
 
 }

@@ -17,13 +17,13 @@ import com.google.common.collect.Maps;
 import com.mine.oa.constant.OaConstants;
 import com.mine.oa.dto.DeptDto;
 import com.mine.oa.dto.DeptQueryDto;
+import com.mine.oa.dto.LoginInfoDTO;
 import com.mine.oa.entity.DepartmentPO;
 import com.mine.oa.entity.EmployeePO;
 import com.mine.oa.exception.InParamException;
 import com.mine.oa.mapper.DeptMapper;
 import com.mine.oa.mapper.EmployeeMapper;
 import com.mine.oa.service.DeptService;
-import com.mine.oa.util.RsaUtil;
 import com.mine.oa.vo.CommonResultVo;
 
 /***
@@ -79,8 +79,8 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public CommonResultVo update(DepartmentPO param, String token) {
-        if (param == null || StringUtils.isAnyBlank(param.getName(), token)) {
+    public CommonResultVo update(DepartmentPO param) {
+        if (param == null || StringUtils.isAnyBlank(param.getName())) {
             throw new InParamException();
         }
         if (deptMapper.getNameCount(param) > 0) {
@@ -93,7 +93,7 @@ public class DeptServiceImpl implements DeptService {
         if (parentDept.getState() == OaConstants.DELETE_STATE) {
             return new CommonResultVo().warn("啊哦，在您操作期间父级部门被删除了，请重新选择吧-_-");
         }
-        param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
+        param.setUpdateUserId(LoginInfoDTO.get().getId());
         if (deptMapper.merge(param) < 1) {
             throw new RuntimeException();
         }
@@ -102,10 +102,7 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public CommonResultVo delete(Integer id, String token) {
-        if (id == null || StringUtils.isBlank(token)) {
-            throw new InParamException();
-        }
+    public CommonResultVo delete(Integer id) {
         DepartmentPO param = new DepartmentPO();
         param.setParentId(id);
         param.setState(OaConstants.NORMAL_STATE);
@@ -129,7 +126,7 @@ public class DeptServiceImpl implements DeptService {
             return new CommonResultVo().warn(msg + "！");
         }
         param.setState(OaConstants.DELETE_STATE);
-        param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
+        param.setUpdateUserId(LoginInfoDTO.get().getId());
         if (deptMapper.updateState(param) < 1) {
             throw new InParamException();
         }
@@ -137,14 +134,11 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    public CommonResultVo enable(Integer id, String token) {
-        if (id == null || StringUtils.isBlank(token)) {
-            throw new InParamException();
-        }
+    public CommonResultVo enable(Integer id) {
         DepartmentPO param = new DepartmentPO();
         param.setId(id);
         param.setState(OaConstants.NORMAL_STATE);
-        param.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
+        param.setUpdateUserId(LoginInfoDTO.get().getId());
         if (deptMapper.updateState(param) < 1) {
             throw new InParamException();
         }
@@ -161,8 +155,8 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public CommonResultVo insert(DepartmentPO param, String token) {
-        if (param == null || StringUtils.isAnyBlank(param.getName(), token)) {
+    public CommonResultVo insert(DepartmentPO param) {
+        if (param == null || StringUtils.isAnyBlank(param.getName())) {
             throw new InParamException();
         }
         DepartmentPO queryParam = new DepartmentPO();
@@ -179,7 +173,7 @@ public class DeptServiceImpl implements DeptService {
         if (parentDept.get(0).getState() == OaConstants.DELETE_STATE) {
             return new CommonResultVo().warn("啊哦，在您操作期间父级部门被删除了，请重新选择吧-_-");
         }
-        param.setCreateUserId(RsaUtil.getUserByToken(token).getId());
+        param.setCreateUserId(LoginInfoDTO.get().getId());
         if (deptMapper.insert(param) < 1) {
             throw new InParamException();
         }

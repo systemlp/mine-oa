@@ -14,11 +14,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mine.oa.constant.OaConstants;
+import com.mine.oa.dto.LoginInfoDTO;
 import com.mine.oa.entity.MenuPO;
 import com.mine.oa.exception.InParamException;
 import com.mine.oa.mapper.MenuMapper;
 import com.mine.oa.service.MenuService;
-import com.mine.oa.util.RsaUtil;
 import com.mine.oa.vo.CommonResultVo;
 import com.mine.oa.vo.TreeNodeVO;
 
@@ -39,13 +39,13 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public CommonResultVo insert(MenuPO menu, String token) {
-        CommonResultVo result = checkMenu(menu, token);
+    public CommonResultVo insert(MenuPO menu) {
+        CommonResultVo result = checkMenu(menu);
         if (result != null) {
             return result;
         }
         menu.setCreateTime(new Date());
-        menu.setCreateUserId(RsaUtil.getUserByToken(token).getId());
+        menu.setCreateUserId(LoginInfoDTO.get().getId());
         menu.setState(OaConstants.NORMAL_STATE);
         if (menuMapper.insert(menu) < 1) {
             throw new InParamException();
@@ -55,8 +55,8 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public CommonResultVo delete(Integer id, String token) {
-        if (id == null || StringUtils.isBlank(token)) {
+    public CommonResultVo delete(Integer id) {
+        if (id == null) {
             throw new InParamException();
         }
         MenuPO menu = new MenuPO();
@@ -69,7 +69,7 @@ public class MenuServiceImpl implements MenuService {
         menu.setId(id);
         menu.setState(OaConstants.DELETE_STATE);
         menu.setUpdateTime(new Date());
-        menu.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
+        menu.setUpdateUserId(LoginInfoDTO.get().getId());
         if (menuMapper.updateByPrimaryKeySelective(menu) < 1) {
             throw new InParamException();
         }
@@ -77,15 +77,15 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public CommonResultVo update(MenuPO menu, String token) {
-        CommonResultVo result = checkMenu(menu, token);
+    public CommonResultVo update(MenuPO menu) {
+        CommonResultVo result = checkMenu(menu);
         if (result != null) {
             return result;
         }
         MenuPO updateMenu = new MenuPO();
         BeanUtils.copyProperties(menu, updateMenu);
         updateMenu.setUpdateTime(new Date());
-        updateMenu.setUpdateUserId(RsaUtil.getUserByToken(token).getId());
+        updateMenu.setUpdateUserId(LoginInfoDTO.get().getId());
         updateMenu.setCreateTime(null);
         updateMenu.setCreateUserId(null);
         updateMenu.setState(null);
@@ -160,11 +160,8 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public CommonResultVo findByToken(String token) {
-        if (StringUtils.isBlank(token)) {
-            throw new InParamException();
-        }
-        List<MenuPO> menuList = menuMapper.findByUserId(RsaUtil.getUserByToken(token).getId());
+    public CommonResultVo findByToken() {
+        List<MenuPO> menuList = menuMapper.findByUserId(LoginInfoDTO.get().getId());
         return new CommonResultVo<List<TreeNodeVO>>().success(buildTree(menuList));
     }
 
@@ -172,11 +169,10 @@ public class MenuServiceImpl implements MenuService {
      * 参数校验
      * 
      * @param menu 菜单
-     * @param token 密钥
      * @return 校验结果
      */
-    private CommonResultVo checkMenu(MenuPO menu, String token) {
-        if (menu == null || StringUtils.isAnyBlank(menu.getTitle(), menu.getUrl(), token) || menu.getSort() == null) {
+    private CommonResultVo checkMenu(MenuPO menu) {
+        if (menu == null || StringUtils.isAnyBlank(menu.getTitle(), menu.getUrl()) || menu.getSort() == null) {
             throw new InParamException();
         }
         MenuPO menuQuery = new MenuPO();

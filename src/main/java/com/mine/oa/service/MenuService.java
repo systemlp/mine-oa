@@ -14,11 +14,11 @@ import com.mine.oa.vo.CommonResultVo;
  */
 public interface MenuService {
 
-    CommonResultVo insert(MenuPO menu, String token);
+    CommonResultVo insert(MenuPO menu);
 
-    CommonResultVo delete(Integer id, String token);
+    CommonResultVo delete(Integer id);
 
-    CommonResultVo update(MenuPO menu, String token);
+    CommonResultVo update(MenuPO menu);
 
     CommonResultVo findTree();
 
@@ -26,6 +26,6 @@ public interface MenuService {
 
     CommonResultVo findAllForUpdateParent(Integer id);
 
-    CommonResultVo findByToken(String token);
+    CommonResultVo findByToken();
 
 }

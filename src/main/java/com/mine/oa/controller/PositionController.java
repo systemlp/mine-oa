@@ -30,23 +30,23 @@ public class PositionController {
     }
 
     @PostMapping("/merge")
-    public CommonResultVo merge(@RequestBody PositionPO param, @RequestHeader String token) {
-        return positionService.merge(param, token);
+    public CommonResultVo merge(@RequestBody PositionPO param) {
+        return positionService.merge(param);
     }
 
     @GetMapping("/delete/{id}")
-    public CommonResultVo delete(@PathVariable Integer id, @RequestHeader String token) {
-        return positionService.delete(id, token);
+    public CommonResultVo delete(@PathVariable Integer id) {
+        return positionService.delete(id);
     }
 
     @GetMapping("/enable/{id}")
-    public CommonResultVo enable(@PathVariable Integer id, @RequestHeader String token) {
-        return positionService.enable(id, token);
+    public CommonResultVo enable(@PathVariable Integer id) {
+        return positionService.enable(id);
     }
 
     @PostMapping("/insert")
-    public CommonResultVo insert(@RequestBody PositionDto param, @RequestHeader String token) {
-        return positionService.insert(param, token);
+    public CommonResultVo insert(@RequestBody PositionDto param) {
+        return positionService.insert(param);
     }
 
 }

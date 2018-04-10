@@ -18,12 +18,12 @@ public interface EmployeeService {
 
     CommonResultVo<PageInfo<EmployeeDto>> findPageByParam(EmployeeQueryDto param);
 
-    CommonResultVo modify(EmployeeDto param,String token);
+    CommonResultVo modify(EmployeeDto param);
 
-    CommonResultVo insert(EmployeeDto param,String token);
+    CommonResultVo insert(EmployeeDto param);
 
-    CommonResultVo leave(Integer id,String token);
+    CommonResultVo leave(Integer id);
 
-    CommonResultVo enable(Integer id,String token);
+    CommonResultVo enable(Integer id);
 
 }

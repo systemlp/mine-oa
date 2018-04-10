@@ -1,9 +1,9 @@
 package com.mine.oa.controller;
 
-import com.mine.oa.dto.EmployeeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.mine.oa.dto.EmployeeDto;
 import com.mine.oa.dto.EmployeeQueryDto;
 import com.mine.oa.service.EmployeeService;
 import com.mine.oa.vo.CommonResultVo;
@@ -30,23 +30,23 @@ public class EmployeeController {
     }
 
     @PostMapping("/modify")
-    public CommonResultVo modify(@RequestBody EmployeeDto param, @RequestHeader String token) {
-        return employeeService.modify(param, token);
+    public CommonResultVo modify(@RequestBody EmployeeDto param) {
+        return employeeService.modify(param);
     }
 
     @PostMapping("/insert")
-    public CommonResultVo insert(@RequestBody EmployeeDto param, @RequestHeader String token) {
-        return employeeService.insert(param, token);
+    public CommonResultVo insert(@RequestBody EmployeeDto param) {
+        return employeeService.insert(param);
     }
 
     @GetMapping("/{id}/leave")
-    public CommonResultVo leave(@PathVariable Integer id, @RequestHeader String token) {
-        return employeeService.leave(id, token);
+    public CommonResultVo leave(@PathVariable Integer id) {
+        return employeeService.leave(id);
     }
 
     @GetMapping("/{id}/enable")
-    public CommonResultVo enable(@PathVariable Integer id, @RequestHeader String token) {
-        return employeeService.enable(id, token);
+    public CommonResultVo enable(@PathVariable Integer id) {
+        return employeeService.enable(id);
     }
 
 }

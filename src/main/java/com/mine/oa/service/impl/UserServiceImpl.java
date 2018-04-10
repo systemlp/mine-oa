@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.collect.Maps;
+import com.mine.oa.dto.LoginInfoDTO;
 import com.mine.oa.dto.UserDataDto;
 import com.mine.oa.dto.UserLoginDto;
 import com.mine.oa.entity.UserPO;
@@ -64,11 +65,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CommonResultVo<UserPO> getByToken(String token) {
-        if (StringUtils.isBlank(token)) {
-            throw new InParamException("token异常");
-        }
-        UserPO userPo = RsaUtil.getUserByToken(token);
+    public CommonResultVo<UserPO> getByToken() {
+        UserPO userPo = LoginInfoDTO.get();
         userPo = userMapper.getByCondition(userPo);
         if (userPo == null) {
             throw new InParamException("token异常");
@@ -80,11 +78,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CommonResultVo updatePwd(String token, String oldPwd, String newPwd) {
-        if (StringUtils.isAnyBlank(token, oldPwd, newPwd)) {
+    public CommonResultVo updatePwd(String oldPwd, String newPwd) {
+        if (StringUtils.isAnyBlank(oldPwd, newPwd)) {
             throw new InParamException();
         }
-        UserPO userPo = RsaUtil.getUserByToken(token);
+        UserPO userPo = LoginInfoDTO.get();
         Integer userId = userPo.getId();
         String userName = userPo.getUserName();
         userPo.setPassword(DigestUtils.sha256Hex(oldPwd + userPo.getUserName()));
@@ -106,11 +104,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CommonResultVo<UserDataDto> findDataByUserName(String userName) {
-        if (StringUtils.isBlank(userName)) {
-            throw new InParamException();
-        }
-        UserDataDto dataDto = userMapper.findDataByUserName(RsaUtil.getUserByToken(userName).getUserName());
+    public CommonResultVo<UserDataDto> findDataByUserName() {
+        UserDataDto dataDto = userMapper.findDataByUserName(LoginInfoDTO.get().getUserName());
         if (dataDto == null) {
             throw new InParamException();
         }
@@ -121,14 +116,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void uploadUserPhoto(String token, MultipartFile userPhoto) {
-        if (StringUtils.isBlank(token)) {
-            throw new InParamException("token异常");
-        }
+    public void uploadUserPhoto(MultipartFile userPhoto) {
         // 无法异步，文件上传时会先将文件临时存储在tomcat目录下，服务器响应后会马上删除该文件
         // taskExecutor.execute(() -> {
         // try {
-        UserPO userPo = RsaUtil.getUserByToken(token);
+        UserPO userPo = LoginInfoDTO.get();
         userPo.setPhotoUrl(fileUtil.uploadImg(userPhoto));
         userMapper.updatePhoto(userPo);
         // } catch (Exception e) {

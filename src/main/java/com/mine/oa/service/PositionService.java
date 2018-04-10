@@ -18,12 +18,12 @@ public interface PositionService {
 
     CommonResultVo<PageInfo<PositionPO>> findByParam(PositionDto param);
 
-    CommonResultVo merge(PositionPO param, String token);
+    CommonResultVo merge(PositionPO param);
 
-    CommonResultVo delete(Integer id, String token);
+    CommonResultVo delete(Integer id);
 
-    CommonResultVo enable(Integer id, String token);
+    CommonResultVo enable(Integer id);
 
-    CommonResultVo insert(PositionDto param, String token);
+    CommonResultVo insert(PositionDto param);
 
 }

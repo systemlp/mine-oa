@@ -18,6 +18,7 @@ import com.github.pagehelper.PageInfo;
 import com.mine.oa.constant.OaConstants;
 import com.mine.oa.dto.EmployeeDto;
 import com.mine.oa.dto.EmployeeQueryDto;
+import com.mine.oa.dto.LoginInfoDTO;
 import com.mine.oa.entity.DepartmentPO;
 import com.mine.oa.entity.EmployeePO;
 import com.mine.oa.entity.PositionPO;
@@ -28,7 +29,6 @@ import com.mine.oa.mapper.EmployeeMapper;
 import com.mine.oa.mapper.PositionMapper;
 import com.mine.oa.mapper.UserMapper;
 import com.mine.oa.service.EmployeeService;
-import com.mine.oa.util.RsaUtil;
 import com.mine.oa.vo.CommonResultVo;
 
 /***
@@ -64,15 +64,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public CommonResultVo modify(EmployeeDto param, String token) {
-        CommonResultVo checkResult = this.checkEmployee(param, token);
+    public CommonResultVo modify(EmployeeDto param) {
+        CommonResultVo checkResult = this.checkEmployee(param);
         if (checkResult != null) {
             return checkResult;
         }
         if (param.getId() == null) {
             throw new InParamException();
         }
-        UserPO loginUser = RsaUtil.getUserByToken(token);
+        UserPO loginUser = LoginInfoDTO.get();
         Date now = new Date();
         UserPO userPo = new UserPO();
         userPo.setId(param.getUserId());
@@ -92,8 +92,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public CommonResultVo insert(EmployeeDto param, String token) {
-        CommonResultVo checkResult = this.checkEmployee(param, token);
+    public CommonResultVo insert(EmployeeDto param) {
+        CommonResultVo checkResult = this.checkEmployee(param);
         if (checkResult != null) {
             return checkResult;
         }
@@ -102,7 +102,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (userMapper.selectOne(queryParam) != null) {
             return new CommonResultVo().warn("用户名已存在");
         }
-        UserPO loginUser = RsaUtil.getUserByToken(token);
+        UserPO loginUser = LoginInfoDTO.get();
         UserPO userPo = this.initUser(param, loginUser);
         if (userMapper.insertSelective(userPo) < 1) {
             throw new InParamException();
@@ -119,22 +119,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public CommonResultVo leave(Integer id, String token) {
-        changeState(id, token, OaConstants.DELETE_STATE);
+    public CommonResultVo leave(Integer id) {
+        changeState(id, OaConstants.DELETE_STATE);
         return new CommonResultVo().successMsg("离职成功，对应用户已失效");
     }
 
     @Override
     @Transactional
-    public CommonResultVo enable(Integer id, String token) {
-        changeState(id, token, OaConstants.NORMAL_STATE);
+    public CommonResultVo enable(Integer id) {
+        changeState(id, OaConstants.NORMAL_STATE);
         return new CommonResultVo().successMsg("恢复成功，对应用户已重新启用");
     }
 
-    private CommonResultVo checkEmployee(EmployeeDto param, String token) {
+    private CommonResultVo checkEmployee(EmployeeDto param) {
         if (param == null
                 || StringUtils.isAnyBlank(param.getUserName(), param.getEmail(), param.getName(), param.getCardNo(),
-                        param.getMobile(), token)
+                        param.getMobile())
                 || !ObjectUtils.allNotNull(param.getSex(), param.getCardType(), param.getEntryDate(), param.getDeptId(),
                         param.getPositionId())) {
             throw new InParamException();
@@ -166,8 +166,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         return userPo;
     }
 
-    private void changeState(Integer id, String token, int state) {
-        if (id == null || id < 1 || StringUtils.isBlank(token)) {
+    private void changeState(Integer id, int state) {
+        if (id == null || id < 1) {
             throw new InParamException();
         }
         EmployeePO emp = employeeMapper.selectByPrimaryKey(id);
@@ -179,7 +179,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new InParamException(String.format("user id不存在%s", emp.getUserId()));
         }
         Date now = new Date();
-        UserPO loginUser = RsaUtil.getUserByToken(token);
+        UserPO loginUser = LoginInfoDTO.get();
         EmployeePO leaveEmp = new EmployeePO();
         leaveEmp.setId(id);
         leaveEmp.setUpdateTime(now);

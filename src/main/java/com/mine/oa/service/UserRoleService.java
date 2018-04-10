@@ -18,5 +18,5 @@ public interface UserRoleService {
 
     CommonResultVo findByUserId(Integer userId, PageQueryDto page);
 
-    CommonResultVo roleManage(Integer userId, Set<Integer> roleIds, String token);
+    CommonResultVo roleManage(Integer userId, Set<Integer> roleIds);
 }

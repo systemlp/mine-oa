@@ -24,18 +24,18 @@ public class MenuController {
     private MenuService menuService;
 
     @PostMapping("/insert")
-    public CommonResultVo insert(@RequestBody MenuPO menu, @RequestHeader String token) {
-        return menuService.insert(menu, token);
+    public CommonResultVo insert(@RequestBody MenuPO menu) {
+        return menuService.insert(menu);
     }
 
     @GetMapping("/{id}/delete")
-    public CommonResultVo delete(@PathVariable Integer id, @RequestHeader String token) {
-        return menuService.delete(id, token);
+    public CommonResultVo delete(@PathVariable Integer id) {
+        return menuService.delete(id);
     }
 
     @PostMapping("/update")
-    public CommonResultVo update(@RequestBody MenuPO menu, @RequestHeader String token) {
-        return menuService.update(menu, token);
+    public CommonResultVo update(@RequestBody MenuPO menu) {
+        return menuService.update(menu);
     }
 
     @GetMapping("/findTree")
@@ -54,8 +54,8 @@ public class MenuController {
     }
 
     @GetMapping("/findByToken")
-    public CommonResultVo findByToken(@RequestHeader String token) {
-        return menuService.findByToken(token);
+    public CommonResultVo findByToken() {
+        return menuService.findByToken();
     }
 
 }

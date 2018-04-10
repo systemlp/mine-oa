@@ -17,17 +17,17 @@ import java.util.Set;
  */
 public interface RoleService {
 
-    CommonResultVo insert(RolePO role, String token);
+    CommonResultVo insert(RolePO role);
 
-    CommonResultVo delete(Integer id, String token);
+    CommonResultVo delete(Integer id);
 
-    CommonResultVo enable(Integer id, String token);
+    CommonResultVo enable(Integer id);
 
-    CommonResultVo update(RolePO role, String token);
+    CommonResultVo update(RolePO role);
 
     CommonResultVo findPageByParam(RoleQueryDTO roleQuery);
 
     CommonResultVo findMenu(Integer id);
 
-    CommonResultVo menuAuthorize(Integer id, Set<Integer> menuIdSet,String token);
+    CommonResultVo menuAuthorize(Integer id, Set<Integer> menuIdSet);
 }

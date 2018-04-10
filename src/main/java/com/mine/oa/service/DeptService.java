@@ -23,14 +23,14 @@ public interface DeptService {
 
     CommonResultVo<List<DepartmentPO>> findOptionalParnet(Integer id);
 
-    CommonResultVo update(DepartmentPO param, String token);
+    CommonResultVo update(DepartmentPO param);
 
-    CommonResultVo delete(Integer id, String token);
+    CommonResultVo delete(Integer id);
 
-    CommonResultVo enable(Integer id, String token);
+    CommonResultVo enable(Integer id);
 
     CommonResultVo<List<DepartmentPO>> findOptional();
 
-    CommonResultVo insert(DepartmentPO param, String token);
+    CommonResultVo insert(DepartmentPO param);
 
 }
