@@ -11,7 +11,7 @@ import com.mine.oa.entity.UserPO;
  * @see [相关类/方法]（可选）
  * @since [产品/模块版本] （可选）
  */
-public class LoginInfoDTO {
+public final class LoginInfoDTO {
 
     private static final ThreadLocal<UserPO> LOGIN_INFO = new ThreadLocal<>();
 

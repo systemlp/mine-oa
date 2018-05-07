@@ -2,6 +2,8 @@ package com.mine.oa.service.impl;
 
 import java.util.*;
 
+import com.mine.oa.entity.UserRolePO;
+import com.mine.oa.mapper.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +23,6 @@ import com.mine.oa.entity.MenuPO;
 import com.mine.oa.entity.RoleMenu;
 import com.mine.oa.entity.RolePO;
 import com.mine.oa.exception.InParamException;
-import com.mine.oa.mapper.MenuMapper;
-import com.mine.oa.mapper.RoleMapper;
-import com.mine.oa.mapper.RoleMenuMapper;
 import com.mine.oa.service.RoleService;
 import com.mine.oa.vo.CommonResultVo;
 
@@ -45,6 +44,8 @@ public class RoleServiceImpl implements RoleService {
     private MenuMapper menuMapper;
     @Autowired
     private RoleMenuMapper roleMenuMapper;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
 
     @Override
     public CommonResultVo insert(RolePO role) {
@@ -61,6 +62,14 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public CommonResultVo delete(Integer id) {
+        if (id == null) {
+            throw new InParamException();
+        }
+        UserRolePO userRole = new UserRolePO();
+        userRole.setRoleId(id);
+        if (userRoleMapper.selectCount(userRole) > 0) {
+            return new CommonResultVo().warn("无法删除，该角色下存在用户！");
+        }
         if (this.updateState(id, OaConstants.DELETE_STATE) < 1) {
             throw new InParamException();
         }
@@ -69,7 +78,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public CommonResultVo enable(Integer id) {
-        if (this.updateState(id, OaConstants.NORMAL_STATE) < 1) {
+        if (id == null || this.updateState(id, OaConstants.NORMAL_STATE) < 1) {
             throw new InParamException();
         }
         return new CommonResultVo().successMsg("启用成功");
@@ -158,9 +167,6 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private int updateState(Integer id, Integer state) {
-        if (id == null) {
-            throw new InParamException();
-        }
         RolePO role = new RolePO();
         role.setId(id);
         role.setUpdateTime(new Date());

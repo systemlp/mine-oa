@@ -1,5 +1,6 @@
 package com.mine.oa.controller;
 
+import com.mine.oa.dto.MenuQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,6 +57,11 @@ public class MenuController {
     @GetMapping("/findByToken")
     public CommonResultVo findByToken() {
         return menuService.findByToken();
+    }
+
+    @PostMapping("/hasMenu")
+    public CommonResultVo hasMenu(@RequestBody MenuQueryDTO menuQueryDTO) {
+        return menuService.hasMenu(menuQueryDTO);
     }
 
 }

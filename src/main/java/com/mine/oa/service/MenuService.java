@@ -1,5 +1,6 @@
 package com.mine.oa.service;
 
+import com.mine.oa.dto.MenuQueryDTO;
 import com.mine.oa.entity.MenuPO;
 import com.mine.oa.vo.CommonResultVo;
 
@@ -27,5 +28,7 @@ public interface MenuService {
     CommonResultVo findAllForUpdateParent(Integer id);
 
     CommonResultVo findByToken();
+
+    CommonResultVo hasMenu(MenuQueryDTO menuQueryDTO);
 
 }

@@ -1,5 +1,6 @@
 package com.mine.oa.mapper;
 
+import com.mine.oa.dto.MenuQueryDTO;
 import com.mine.oa.entity.MenuPO;
 import com.mine.oa.util.BaseMapper;
 
@@ -23,4 +24,6 @@ public interface MenuMapper extends BaseMapper<MenuPO> {
     List<MenuPO> findByRole(Integer roleId);
 
     List<MenuPO> findByUserId(Integer userId);
+
+    Integer hasMenu(MenuQueryDTO menuQueryDTO);
 }

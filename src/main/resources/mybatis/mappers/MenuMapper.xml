@@ -8,13 +8,13 @@
         FROM
         t_menu t
         WHERE
-          t.state = #{state}
+        t.state = #{state}
         AND (
-            t.title = #{title}
-            OR t.url = #{url}
+        t.title = #{title}
+        OR t.url = #{url}
         )
         <if test="id!=null">
-        AND t.id != #{id}
+            AND t.id != #{id}
         </if>
         LIMIT 1
     </select>
@@ -31,20 +31,29 @@
     <select id="findByRole" resultType="MenuPO">
         SELECT *
         FROM t_menu t
-        INNER JOIN t_role_menu t1 ON  t.id=t1.menu_id AND t1.role_id=#{roleId} AND t.state=1
+            INNER JOIN t_role_menu t1 ON t.id = t1.menu_id AND t1.role_id = #{roleId} AND t.state = 1
     </select>
-    
+
     <select id="findByUserId" resultType="MenuPO">
-        SELECT
-            t.*
+        SELECT t.*
         FROM
             t_menu t
             INNER JOIN t_role_menu t1 ON t.id = t1.menu_id
             INNER JOIN t_user_role t2 ON t1.role_id = t2.role_id
-        WHERE t.state=1
-            AND t2.user_id = #{userId}
-        ORDER BY t.parent_id,t.sort
+        WHERE t.state = 1
+              AND t2.user_id = #{userId}
+        ORDER BY t.parent_id, t.sort
     </select>
 
+    <select id="hasMenu" resultType="int">
+        SELECT COUNT(1)
+        FROM
+            t_menu t
+            INNER JOIN t_role_menu t1 ON t.id = t1.menu_id
+            INNER JOIN t_user_role t2 ON t1.role_id = t2.role_id
+        WHERE t.state = 1
+              AND t2.user_id = #{userId}
+              AND t.url = #{url}
+    </select>
 
 </mapper>

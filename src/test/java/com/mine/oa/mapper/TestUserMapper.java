@@ -41,4 +41,9 @@ public class TestUserMapper extends TestBase {
         System.out.println(userPo.getId());
     }
 
+    @Test
+    public void tesetSelect() {
+        userMapper.selectByPrimaryKey(1);
+    }
+
 }

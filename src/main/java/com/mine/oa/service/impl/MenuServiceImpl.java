@@ -2,6 +2,7 @@ package com.mine.oa.service.impl;
 
 import java.util.*;
 
+import com.mine.oa.dto.MenuQueryDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,6 +164,15 @@ public class MenuServiceImpl implements MenuService {
     public CommonResultVo findByToken() {
         List<MenuPO> menuList = menuMapper.findByUserId(LoginInfoDTO.get().getId());
         return new CommonResultVo<List<TreeNodeVO>>().success(buildTree(menuList));
+    }
+
+    @Override
+    public CommonResultVo hasMenu(MenuQueryDTO menuQueryDTO) {
+        if (menuQueryDTO == null || StringUtils.isBlank(menuQueryDTO.getUrl())) {
+            throw new InParamException();
+        }
+        menuQueryDTO.setUserId(LoginInfoDTO.get().getId());
+        return new CommonResultVo<>().success(menuMapper.hasMenu(menuQueryDTO));
     }
 
     /***
