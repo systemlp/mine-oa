@@ -1,12 +1,13 @@
 package com.mine.oa;
 
-import com.mine.oa.job.TimedTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import com.mine.oa.job.TimedTask;
+import com.mine.oa.service.SimulateSendMsgService;
 
 /***
  *
@@ -22,10 +23,22 @@ public class TimerJob {
 
     @Resource(name = "removeImgJob")
     private TimedTask removeImgJob;
+    @Autowired
+    private SimulateSendMsgService simulateSendMsgService;
 
     @Scheduled(cron = "0 30 1 * * ?")
     public void removeImg() {
         removeImgJob.run();
+    }
+
+    @Scheduled(cron = "2/3 * * * * ?")
+    public void putMsgToQueue() {
+        simulateSendMsgService.putMsgToQueue();
+    }
+
+    @Scheduled(cron = "0/30 * * * * ?")
+    public void sendMsgFromQueue() {
+        simulateSendMsgService.sendMsgFromQueue();
     }
 
 }

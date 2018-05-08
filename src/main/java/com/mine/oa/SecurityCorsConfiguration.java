@@ -1,18 +1,21 @@
 package com.mine.oa;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ScheduledExecutorService;
+
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 /***
  *
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈功能详细描述〉
  *
  * @author liupeng
@@ -36,14 +39,30 @@ public class SecurityCorsConfiguration {
         return bean;
     }
 
+    // @Bean
+    // public TaskExecutor threadPool() {
+    // ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+    // taskExecutor.setQueueCapacity(200);
+    // taskExecutor.setCorePoolSize(5);
+    // taskExecutor.setMaxPoolSize(8);
+    // taskExecutor.initialize();
+    // return taskExecutor;
+    // }
+
     @Bean
-    public TaskExecutor threadPool() {
-        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setQueueCapacity(200);
-        taskExecutor.setCorePoolSize(4);
-        taskExecutor.setMaxPoolSize(8);
-        taskExecutor.initialize();
-        return taskExecutor;
+    public ForkJoinPool forkJoinPool() {
+        return new ForkJoinPool();
+    }
+
+    /***
+     * 定时任务默认使用的Single线程池，每次只会有一个线程执行
+     * 
+     * @see ScheduledTaskRegistrar#scheduleTasks()
+     * @return 共定时任务使用的线程池
+     */
+    @Bean(destroyMethod = "shutdown")
+    public ScheduledExecutorService taskScheduler() {
+        return Executors.newScheduledThreadPool(5);
     }
 
 }

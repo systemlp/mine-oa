@@ -145,7 +145,8 @@ public class OrderBinary<T extends Comparable> {
         }
         if (node.key.equals(data)) {
             return true;
-        } else if (node.key.compareTo(data) > 0) {
+        }
+        if (node.key.compareTo(data) > 0) {
             return contain(node.left, data);
         }
         return contain(node.right, data);
